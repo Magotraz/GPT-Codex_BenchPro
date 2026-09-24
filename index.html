@@ -60,6 +60,10 @@
   <script>
     const SUPABASE_URL = 'https://ttmkcmeqiawrzbvymhal.supabase.co';
     const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_kYY2o5gsLpUww-bgH0az4A_nQhdMiaN';
+    const authCallback = new URLSearchParams(window.location.hash.slice(1));
+    if ((authCallback.get('type') === 'invite' && authCallback.has('access_token')) || authCallback.has('error_code')) {
+      window.location.replace('/admin.html' + window.location.hash);
+    }
     const people=[
       {name:'Senior Salesforce Developer',role:'Platform development · 8+ years',category:'Salesforce',location:'North America · Remote',region:'North America',availability:'available',avatar:'photo-1500648767791-00dcc994a43e',skills:['Sales Cloud','Apex','Integrations'],bio:'Example talent profile. Senior Salesforce practitioner with implementation experience across complex enterprise environments. Final availability and fit are confirmed by our recruiting team.'},
       {name:'Salesforce Solution Architect',role:'Architecture & delivery · 12+ years',category:'Salesforce',location:'Europe · Hybrid',region:'Europe',availability:'available',avatar:'photo-1534528741775-53994a69daeb',skills:['Service Cloud','Data Cloud','Architecture'],bio:'Example talent profile. Experienced architect who leads solution design, stakeholder alignment, and delivery governance across multi-team programs.'},
