@@ -1,7 +1,10 @@
 create schema if not exists private;
 
 create table private.benchpro_staff_access (
-  email text primary key check (email = lower(email)),
+  email text primary key check (
+    email = lower(trim(email))
+    and email ~* '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$'
+  ),
   created_at timestamptz not null default now()
 );
 
