@@ -23,6 +23,7 @@
   </style>
   <style>
     .modal{max-height:calc(100vh - 40px);overflow:auto}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 9px}.form-field{width:100%;min-width:0;padding:13px;border:1px solid #e4e8e1;border-radius:9px;margin:4px 0 10px;background:#fff;color:var(--ink);font:inherit}.form-field:focus{outline:2px solid #89ac62;outline-offset:1px}.form-field.full{grid-column:1/-1}.form-field::placeholder{color:#89958e}@media(max-width:480px){.form-grid{grid-template-columns:1fr}.form-field.full{grid-column:auto}}
+    .jd-upload{grid-column:1/-1;margin:2px 0 10px}.jd-upload-label{font-size:12px;font-weight:700;color:var(--ink);margin:0 0 7px}.jd-dropzone{border:1px dashed #b9c8b4;border-radius:10px;background:#fbfcf9;padding:15px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px;cursor:pointer}.jd-dropzone:hover,.jd-dropzone:focus,.jd-dropzone.dragover{border-color:#789c58;background:#f4f8ee;outline:2px solid #89ac6240}.jd-drop-copy strong{display:block;color:var(--ink);font-size:13px;margin-bottom:3px}.jd-drop-actions{display:flex;align-items:center;gap:8px;flex:none}.jd-file-name{font-size:11px;color:var(--deep);font-weight:700;overflow-wrap:anywhere}.jd-upload-note{font-size:10px;color:var(--muted);margin:6px 0 0}.jd-file-button,.jd-remove-button{border:1px solid var(--line);border-radius:7px;background:white;padding:8px 10px;color:var(--deep);font-size:11px;font-weight:700;cursor:pointer}.jd-remove-button{color:#8a493b}.@media(max-width:480px){.jd-upload{grid-column:auto}.jd-dropzone{align-items:flex-start;flex-direction:column}.jd-drop-actions{width:100%;justify-content:space-between}}
   </style>
 </head>
 <body>
@@ -101,6 +102,15 @@
             <input class="form-field" name="target_start_date" type="date" aria-label="Target start date" title="Target start date">
             <input class="form-field full" name="work_location_timezone" placeholder="Work location or time zone" aria-label="Work location or time zone">
             <textarea class="form-field full" name="project_details" placeholder="A few details about the project or experience needed" aria-label="Project details" rows="3" style="resize:vertical"></textarea>
+            <div class="jd-upload">
+              <div class="jd-upload-label">Role details <span style="font-weight:400;color:var(--muted)">(type details above or attach a JD)</span></div>
+              <input class="jd-file-input" name="jd_file" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+              <div class="jd-dropzone" tabindex="0" role="button" aria-label="Choose or drop a role description file">
+                <div class="jd-drop-copy"><strong>Drop the role description here</strong><span>PDF, DOC or DOCX · up to 10 MB</span></div>
+                <div class="jd-drop-actions"><span class="jd-file-name" aria-live="polite"></span><button class="jd-file-button" type="button">Choose file</button><button class="jd-remove-button" type="button" hidden>Remove</button></div>
+              </div>
+              <p class="jd-upload-note">Your file is stored privately and shared with the BenchPro team for this request.</p>
+            </div>
           </div>
           <p data-form-error role="alert" hidden style="font-size:12px;color:#a33b32;margin:4px 0 10px">We couldn’t send your request. Please try again.</p>
           <p style="font-size:11px;color:#71807a;line-height:1.5;margin:2px 0 10px">We’ll use these details to follow up about your staffing request.</p>
@@ -131,7 +141,20 @@
       if(form.elements.website.value.trim()){success();return}
       const values=new FormData(form);
       const value=name=>String(values.get(name)||'').trim();
+      const jdFile=form.elements.jd_file.files[0]||null;
+      const projectDetails=value('project_details');
+      if(!projectDetails&&!jdFile){errorMessage.textContent='Add project details or attach the role description file.';errorMessage.hidden=false;return}
+      const fileExtension=jdFile?.name.split('.').pop().toLowerCase()||'';
+      const mimeByExtension={pdf:'application/pdf',doc:'application/msword',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'};
+      if(jdFile&&(jdFile.size>10*1024*1024||!mimeByExtension[fileExtension]||(jdFile.type&&jdFile.type!==mimeByExtension[fileExtension]))){errorMessage.textContent='Choose a PDF, DOC or DOCX file up to 10 MB.';errorMessage.hidden=false;return}
+      const uuidBytes=crypto.getRandomValues(new Uint8Array(16));
+      uuidBytes[6]=(uuidBytes[6]&15)|64;uuidBytes[8]=(uuidBytes[8]&63)|128;
+      const requestId=[...uuidBytes].map((byte,index)=>(index===4||index===6||index===8||index===10?'-':'')+byte.toString(16).padStart(2,'0')).join('');
+      const cleanBase=(jdFile?.name||'').replace(/\\/g,'/').split('/').pop().replace(/\.[^.]*$/,'').replace(/[^A-Za-z0-9._-]/g,'_').replace(/^[^A-Za-z0-9]+/,'').slice(0,110).replace(/[. _-]+$/,'')||'role-description';
+      const jdFileName=jdFile?cleanBase+'.'+fileExtension:null;
+      const jdFilePath=jdFile?'requests/'+requestId+'/'+jdFileName:null;
       const payload={
+        id:requestId,
         contact_name:value('contact_name'),
         company_name:value('company_name'),
         work_email:value('work_email'),
@@ -143,12 +166,20 @@
         project_duration:value('project_duration')||null,
         target_start_date:value('target_start_date')||null,
         work_location_timezone:value('work_location_timezone')||null,
-        project_details:value('project_details')||null
+        project_details:projectDetails||null,
+        jd_file_path:jdFilePath,
+        jd_file_name:jdFile?jdFile.name.slice(0,180):null,
+        jd_file_size:jdFile?jdFile.size:null,
+        jd_file_type:jdFile?mimeByExtension[fileExtension]:null
       };
       submit.disabled=true;
       submit.textContent='Sending request…';
       errorMessage.hidden=true;
       try{
+        if(jdFile){
+          const upload=await fetch(SUPABASE_URL+'/storage/v1/object/client-role-jds/'+jdFilePath.split('/').map(encodeURIComponent).join('/'),{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY,'Content-Type':mimeByExtension[fileExtension],'x-upsert':'false'},body:jdFile});
+          if(!upload.ok)throw new Error('upload_failed');
+        }
         const response=await fetch(SUPABASE_URL+'/rest/v1/staffing_requests',{
           method:'POST',
           headers:{
@@ -162,11 +193,20 @@
         if(!response.ok)throw new Error('request_failed');
         success();
       }catch{
+        errorMessage.textContent=jdFile?'We couldn’t upload the role file or send your request. Please try again.':'We couldn’t send your request. Please try again.';
         errorMessage.hidden=false;
         submit.disabled=false;
         submit.textContent=originalLabel;
       }
     });
+    const jdMimeByExtension={pdf:'application/pdf',doc:'application/msword',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'};
+    function showJdFile(input,file){const zone=input.closest('form').querySelector('.jd-dropzone'),name=zone.querySelector('.jd-file-name'),remove=zone.querySelector('.jd-remove-button'),error=input.closest('form').querySelector('[data-form-error]');if(file){const ext=file.name.split('.').pop().toLowerCase();if(file.size>10*1024*1024||!jdMimeByExtension[ext]||(file.type&&file.type!==jdMimeByExtension[ext])){input.value='';name.textContent='';remove.hidden=true;error.textContent='Choose a PDF, DOC or DOCX file up to 10 MB.';error.hidden=false;return}error.hidden=true;name.textContent=file.name;remove.hidden=false}else{name.textContent='';remove.hidden=true}}
+    content.addEventListener('click',e=>{const remove=e.target.closest('.jd-remove-button');if(remove){const form=remove.closest('form');form.elements.jd_file.value='';showJdFile(form.elements.jd_file,null);return}const browse=e.target.closest('.jd-file-button'),zone=e.target.closest('.jd-dropzone');if(browse||zone){e.preventDefault();(browse||zone).closest('form').elements.jd_file.click()}});
+    content.addEventListener('change',e=>{if(e.target.matches('.jd-file-input'))showJdFile(e.target,e.target.files[0]||null)});
+    content.addEventListener('keydown',e=>{if(e.target.matches('.jd-dropzone')&&(e.key==='Enter'||e.key===' ')){e.preventDefault();e.target.closest('form').elements.jd_file.click()}});
+    content.addEventListener('dragover',e=>{if(e.target.closest('.jd-dropzone')){e.preventDefault();e.target.closest('.jd-dropzone').classList.add('dragover')}});
+    content.addEventListener('dragleave',e=>{const zone=e.target.closest('.jd-dropzone');if(zone&&!zone.contains(e.relatedTarget))zone.classList.remove('dragover')});
+    content.addEventListener('drop',e=>{const zone=e.target.closest('.jd-dropzone');if(!zone)return;e.preventDefault();zone.classList.remove('dragover');const input=zone.closest('form').elements.jd_file;if(e.dataTransfer.files.length){input.files=e.dataTransfer.files;showJdFile(input,input.files[0])}});
     content.addEventListener('click',e=>{if(e.target.closest('[data-close]'))wrap.classList.remove('open')});document.querySelector('.modal-close').addEventListener('click',()=>wrap.classList.remove('open'));document.addEventListener('keydown',e=>{if(e.key==='Escape')wrap.classList.remove('open')});document.getElementById('menu').addEventListener('click',()=>document.getElementById('nav').classList.toggle('open'));document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',()=>document.getElementById('nav').classList.remove('open')));
   </script>
 </body>
