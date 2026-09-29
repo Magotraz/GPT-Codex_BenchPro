@@ -54,7 +54,7 @@
     const SUPABASE_PUBLISHABLE_KEY='sb_publishable_kYY2o5gsLpUww-bgH0az4A_nQhdMiaN';
     const SESSION_KEY='benchpro_candidate_session';
     const authView=document.getElementById('authView'),dashboardView=document.getElementById('dashboardView'),authForm=document.getElementById('authForm'),authFeedback=document.getElementById('authFeedback'),authSubmit=document.getElementById('authSubmit'),profileForm=document.getElementById('profileForm'),saveProfileButton=document.getElementById('saveProfileButton'),resumeFile=document.getElementById('resumeFile');
-    let mode='signup',profile=null,recoveryMode=false;
+    let mode=new URLSearchParams(window.location.search).get('mode')==='login'?'login':'signup',profile=null,recoveryMode=false;
     const getSession=()=>{try{return JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null')}catch{return null}};
     const saveSession=value=>sessionStorage.setItem(SESSION_KEY,JSON.stringify(value));
     const clearSession=()=>sessionStorage.removeItem(SESSION_KEY);
@@ -64,6 +64,7 @@
     function showDashboardError(message=''){const node=document.getElementById('dashboardError');node.textContent=message;node.hidden=!message}
     function showAuth(message=''){authView.hidden=false;dashboardView.hidden=true;document.getElementById('signOutButton').hidden=true;document.getElementById('headerEmail').hidden=true;authFeedback.textContent=message;authFeedback.classList.toggle('error',!!message)}
 function setMode(next){mode=next;const signup=next==='signup',recovery=next==='recovery';document.getElementById('signupTab').hidden=recovery;document.getElementById('loginTab').hidden=recovery;document.getElementById('signupTab').classList.toggle('active',signup);document.getElementById('loginTab').classList.toggle('active',!signup&&!recovery);document.getElementById('authEmailLabel').hidden=recovery;authForm.elements.email.hidden=recovery;authForm.elements.email.required=!recovery;document.getElementById('authTitle').textContent=recovery?'Choose a new password':signup?'Create your profile':'Welcome back';document.getElementById('authDescription').textContent=recovery?'Update the password for your BenchPro account.':signup?'Build your professional profile so our recruiting team can consider you for suitable project work.':'Sign in to update your BenchPro talent profile.';authSubmit.textContent=recovery?'Update password':signup?'Create account':'Sign in';authForm.elements.password.autocomplete=signup||recovery?'new-password':'current-password';authForm.elements.password.minLength=12;document.getElementById('passwordHint').hidden=!signup&&!recovery;document.getElementById('passwordHint').textContent=recovery?'Use at least 12 characters.':'Use at least 12 characters. We’ll email a confirmation link if verification is enabled.';document.getElementById('forgotPasswordButton').hidden=signup||recovery;authFeedback.textContent='';authFeedback.classList.remove('error')}
+    setMode(mode);
     async function authRequest(path,payload,token){return fetch(SUPABASE_URL+'/auth/v1/'+path,{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(token||SUPABASE_PUBLISHABLE_KEY),'Content-Type':'application/json'},body:JSON.stringify(payload)})}
     async function accessToken(){const session=getSession();if(!session?.refresh_token)throw new Error('Please sign in again.');if(session.expires_at>Date.now()/1000+60)return session.access_token;const response=await authRequest('token?grant_type=refresh_token',{refresh_token:session.refresh_token});if(!response.ok){clearSession();throw new Error('Your session expired. Please sign in again.')}const fresh=await response.json();fresh.expires_at=fresh.expires_at||Math.floor(Date.now()/1000)+(fresh.expires_in||3600);saveSession(fresh);return fresh.access_token}
     async function api(path,options={}){const token=await accessToken();const response=await fetch(SUPABASE_URL+'/rest/v1/'+path,{...options,headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+token,'Content-Type':'application/json',...(options.headers||{})}});if(response.status===401){clearSession();showAuth('Your session expired. Please sign in again.')}return response}
@@ -93,3 +94,4 @@ function setMode(next){mode=next;const signup=next==='signup',recovery=next==='r
   </script>
 </body>
 </html>
+
