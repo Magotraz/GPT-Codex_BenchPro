@@ -22,7 +22,7 @@
     @media(max-width:600px){.shell{width:calc(100% - 34px)}header{height:69px}.nav{display:none;position:absolute;left:0;right:0;top:69px;background:var(--paper);padding:20px 24px;z-index:5;border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start}.nav.open{display:flex}.actions{gap:8px}.actions .login{display:none}.login-button{padding:10px 12px;font-size:11px}.actions>.btn{padding:11px 13px;font-size:11px}.menu{display:block}.hero{display:flex;flex-direction:column;align-items:flex-start;padding:44px 0 24px;gap:0}.hero-copy{font-size:14px}h1{font-size:47px}.visual{align-self:center;width:100%;height:300px;margin:4px 0 0;transform:scale(.88);transform-origin:center}.trusted{display:block;text-align:center;line-height:1.7}.logos{justify-content:center;flex-wrap:wrap;gap:12px 22px;margin-top:12px}.section{padding:54px 0}.section-head{align-items:flex-start;gap:15px}.section-head>div:nth-child(2){display:none}h2{font-size:27px}.section-head p{font-size:12px}.search-panel{grid-template-columns:1fr;gap:3px;padding:9px}.field{height:42px;border-right:0;border-bottom:1px solid var(--line)}.field:nth-child(2){border-bottom:1px solid var(--line)}.search-panel .btn{margin-top:4px}.filters{overflow:auto;padding-bottom:5px;flex-wrap:nowrap}.filter{white-space:nowrap}.results{display:none}.cards{grid-template-columns:1fr}.talent-card{padding:17px}.steps-grid{grid-template-columns:1fr 1fr;gap:8px}.step{padding:14px;min-height:152px}.bottom-cta{padding:27px 22px;display:block;margin-bottom:45px}.bottom-cta h2{font-size:23px;max-width:280px}.bottom-cta p{line-height:1.6;max-width:280px;margin-bottom:16px}.footer-links{gap:12px}footer{gap:15px;line-height:1.6}}
   </style>
   <style>
-    .modal{max-height:calc(100vh - 40px);overflow:auto}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 9px}.form-field{width:100%;min-width:0;padding:13px;border:1px solid #e4e8e1;border-radius:9px;margin:4px 0 10px;background:#fff;color:var(--ink);font:inherit}.form-field:focus{outline:2px solid #89ac62;outline-offset:1px}.form-field.full{grid-column:1/-1}.form-field::placeholder,.form-field.is-placeholder{color:#89958e}.form-field.is-placeholder,select.form-field.is-placeholder{-webkit-text-fill-color:#89958e!important;color:#89958e!important}.form-field.is-placeholder option:not([value=""]){color:var(--ink);-webkit-text-fill-color:var(--ink)}@media(max-width:480px){.form-grid{grid-template-columns:1fr}.form-field.full{grid-column:auto}}
+    .modal{max-height:calc(100vh - 40px);overflow:auto}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 9px}.intake-required-field{min-width:0;display:flex;flex-direction:column}.intake-required-field.full{grid-column:1/-1}.intake-required-field .form-field{margin-bottom:3px}.intake-field-error{display:block;color:#a33b32;font-size:11px;line-height:1.35;margin:0 1px 8px}.intake-field-error[hidden]{display:none}.role-details-error{margin:1px 0 10px}.form-field{width:100%;min-width:0;padding:13px;border:1px solid #e4e8e1;border-radius:9px;margin:4px 0 10px;background:#fff;color:var(--ink);font:inherit}.form-field:focus{outline:2px solid #89ac62;outline-offset:1px}.form-field.full{grid-column:1/-1}.form-field::placeholder,.form-field.is-placeholder{color:#89958e}.form-field.is-placeholder,select.form-field.is-placeholder{-webkit-text-fill-color:#89958e!important;color:#89958e!important}.form-field.is-placeholder option:not([value=""]){color:var(--ink);-webkit-text-fill-color:var(--ink)}@media(max-width:480px){.form-grid{grid-template-columns:1fr}.form-field.full{grid-column:auto}}
     .jd-upload{grid-column:1/-1;margin:2px 0 10px}.jd-upload-label{font-size:12px;font-weight:700;color:var(--ink);margin:0 0 7px}.jd-dropzone{border:1px dashed #b9c8b4;border-radius:10px;background:#fbfcf9;padding:15px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px;cursor:pointer}.jd-dropzone:hover,.jd-dropzone:focus,.jd-dropzone.dragover{border-color:#789c58;background:#f4f8ee;outline:2px solid #89ac6240}.jd-drop-copy strong{display:block;color:var(--ink);font-size:13px;margin-bottom:3px}.jd-drop-actions{display:flex;align-items:center;gap:8px;flex:none}.jd-file-name{font-size:11px;color:var(--deep);font-weight:700;overflow-wrap:anywhere}.jd-upload-note{font-size:10px;color:var(--muted);margin:6px 0 0}.jd-file-button,.jd-remove-button{border:1px solid var(--line);border-radius:7px;background:white;padding:8px 10px;color:var(--deep);font-size:11px;font-weight:700;cursor:pointer}.jd-remove-button{color:#8a493b}.@media(max-width:480px){.jd-upload{grid-column:auto}.jd-dropzone{align-items:flex-start;flex-direction:column}.jd-drop-actions{width:100%;justify-content:space-between}}
     .date-field{position:relative;min-width:0}.date-field:before{content:attr(data-placeholder);position:absolute;z-index:1;left:14px;top:17px;color:#89958e;font-size:15px;line-height:1;pointer-events:none}.date-field:not(.has-value):not(:focus-within) input{color:transparent}.date-field:focus-within:before,.date-field.has-value:before{display:none}
   </style>
@@ -88,17 +88,17 @@
         content.innerHTML=`<div class="kicker">${mode==='login'?'Welcome back':'Global project staffing'}</div><h3 id="modalTitle">${mode==='login'?'Client login':'How can BenchPro help?'}</h3><p>${mode==='login'?'Access your BenchPro client account.':'Tell us whether you need talent or want to join our managed professional network.'}</p>${mode==='login'?'<form data-form="login"><input required type="email" placeholder="Email address" style="width:100%;padding:13px;border:1px solid #e4e8e1;border-radius:9px;margin:4px 0 10px"><input required type="password" placeholder="Password" style="width:100%;padding:13px;border:1px solid #e4e8e1;border-radius:9px;margin:4px 0 10px"><button class="btn modal-action">Log in</button></form>':'<button class="btn modal-action" data-modal="employer">I’m hiring for a project&nbsp; →</button><button class="btn light modal-action" data-modal="worker">I’m a technology professional</button>'}<p style="font-size:10px;text-align:center;margin:14px 0 0">Short, mid, or long-term project staffing.</p>`;
       } else if(mode==='employer'||mode==='worker'){
         const worker=mode==='worker';
-      content.innerHTML=worker?`<div class="kicker">For technology professionals</div><h3 id="modalTitle">Join the BenchPro talent network</h3><p>Create a private profile so our recruiting team can consider you for suitable project opportunities. Your details are not published as a public resume.</p><a class="btn modal-action" href="candidate.html">Create your candidate profile&nbsp; →</a><p style="font-size:11px;text-align:center;margin-top:13px">Already registered? <a class="text-link" href="candidate.html">Sign in to your profile</a></p>`:`<div class="kicker">Project staffing request</div><h3 id="modalTitle">Tell us about the role</h3><p>Our team will review your brief and follow up with a tailored shortlist and proposed hourly rate.</p><form data-form="employer">
+      content.innerHTML=worker?`<div class="kicker">For technology professionals</div><h3 id="modalTitle">Join the BenchPro talent network</h3><p>Create a private profile so our recruiting team can consider you for suitable project opportunities. Your details are not published as a public resume.</p><a class="btn modal-action" href="candidate.html">Create your candidate profile&nbsp; →</a><p style="font-size:11px;text-align:center;margin-top:13px">Already registered? <a class="text-link" href="candidate.html">Sign in to your profile</a></p>`:`<div class="kicker">Project staffing request</div><h3 id="modalTitle">Tell us about the role</h3><p>Our team will review your brief and follow up with a tailored shortlist and proposed hourly rate.</p><form data-form="employer" novalidate>
           <div style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden" aria-hidden="true"><label>Leave this field blank<input name="website" tabindex="-1" autocomplete="off"></label></div>
           <div class="form-grid">
-            <input required class="form-field" name="contact_name" autocomplete="name" placeholder="Your name" aria-label="Your name">
-            <input required class="form-field" name="designation" autocomplete="organization-title" placeholder="Your designation" aria-label="Your designation, required">
-            <input required class="form-field" name="company_name" autocomplete="organization" placeholder="Company name" aria-label="Company name">
+            <div class="intake-required-field"><input required class="form-field" name="contact_name" autocomplete="name" placeholder="Your name" aria-label="Your name" aria-describedby="contact-name-error"><small class="intake-field-error" id="contact-name-error" data-field-error="contact_name" role="alert" hidden></small></div>
+            <div class="intake-required-field"><input required class="form-field" name="designation" autocomplete="organization-title" placeholder="Your designation" aria-label="Your designation, required" aria-describedby="designation-error"><small class="intake-field-error" id="designation-error" data-field-error="designation" role="alert" hidden></small></div>
+            <div class="intake-required-field"><input required class="form-field" name="company_name" autocomplete="organization" placeholder="Company name" aria-label="Company name" aria-describedby="company-name-error"><small class="intake-field-error" id="company-name-error" data-field-error="company_name" role="alert" hidden></small></div>
             <select class="form-field intake-select is-placeholder" name="company_size" aria-label="Company size"><option value="">Company size</option><option value="1-10">1–10 employees</option><option value="11-50">11–50 employees</option><option value="51-200">51–200 employees</option><option value="201-500">201–500 employees</option><option value="501-1000">501–1,000 employees</option><option value="1001-5000">1,001–5,000 employees</option><option value="5001-10000">5,001–10,000 employees</option><option value="10001+">10,001+ employees</option><option value="prefer_not_to_say">Prefer not to say</option></select>
             <select class="form-field full intake-select is-placeholder" name="business_type" aria-label="Industry"><option value="">Industry</option><option>IT Services &amp; Consulting</option><option>Software / SaaS</option><option>Financial Services &amp; Fintech</option><option>Healthcare &amp; Life Sciences</option><option>Manufacturing &amp; Industrial</option><option>Retail &amp; Consumer</option><option>Transportation &amp; Logistics</option><option>Telecom &amp; Media</option><option>Energy &amp; Utilities</option><option>Government &amp; Education</option><option>Other</option></select>
-            <input required class="form-field" name="work_email" type="email" autocomplete="email" placeholder="Work email" aria-label="Work email">
-            <input required class="form-field" name="phone_number" type="tel" autocomplete="tel" minlength="7" placeholder="Phone with country code" aria-label="Phone number with country code, required">
-            <input required class="form-field full" name="role_or_skills" placeholder="Role or key skills" aria-label="Role or key skills" value="${escapeHtml(requestedTalent)}">
+            <div class="intake-required-field"><input required class="form-field" name="work_email" type="email" autocomplete="email" placeholder="Work email" aria-label="Work email" aria-describedby="work-email-error"><small class="intake-field-error" id="work-email-error" data-field-error="work_email" role="alert" hidden></small></div>
+            <div class="intake-required-field"><input required class="form-field" name="phone_number" type="tel" autocomplete="tel" minlength="7" placeholder="Phone with country code" aria-label="Phone number with country code, required" aria-describedby="phone-number-error"><small class="intake-field-error" id="phone-number-error" data-field-error="phone_number" role="alert" hidden></small></div>
+            <div class="intake-required-field full"><input required class="form-field" name="role_or_skills" placeholder="Role or key skills" aria-label="Role or key skills" value="${escapeHtml(requestedTalent)}" aria-describedby="role-skills-error"><small class="intake-field-error" id="role-skills-error" data-field-error="role_or_skills" role="alert" hidden></small></div>
             <select class="form-field intake-select is-placeholder" name="project_duration" aria-label="Project duration"><option value="">Project duration</option><option>Short-term (up to 3 months)</option><option>Mid-term (3–12 months)</option><option>Long-term (12+ months)</option><option>Flexible / not sure yet</option></select>
             <div class="date-field" data-placeholder="Start date"><input class="form-field" name="target_start_date" type="date" aria-label="Start date" title="Start date"></div>
             <input class="form-field full" name="work_location_timezone" placeholder="Work location or time zone" aria-label="Work location or time zone">
@@ -111,6 +111,7 @@
                 <div class="jd-drop-actions"><span class="jd-file-name" aria-live="polite"></span><button class="jd-file-button" type="button">Choose file</button><button class="jd-remove-button" type="button" hidden>Remove</button></div>
               </div>
               <p class="jd-upload-note">Your JD is securely stored and available only to the BenchPro team.</p>
+              <p class="intake-field-error role-details-error" data-role-details-error role="alert" hidden>Enter a few project details or attach a role description.</p>
             </div>
           </div>
           <p data-form-error role="alert" hidden style="font-size:12px;color:#a33b32;margin:4px 0 10px">We couldn’t send your request. Please try again.</p>
@@ -121,7 +122,35 @@
       }
       wrap.classList.add('open')
     }
-    document.body.addEventListener('click',e=>{const trigger=e.target.closest('[data-modal]');if(trigger){e.preventDefault();openJoin(trigger.dataset.modal)}if(e.target===wrap||e.target.closest('.modal-close'))wrap.classList.remove('open')});content.addEventListener('submit',async e=>{
+    document.body.addEventListener('click',e=>{const trigger=e.target.closest('[data-modal]');if(trigger){e.preventDefault();openJoin(trigger.dataset.modal)}if(e.target===wrap||e.target.closest('.modal-close'))wrap.classList.remove('open')});const requiredFieldNames=['contact_name','designation','company_name','work_email','phone_number','role_or_skills'];
+    function getRequiredFieldError(field){
+      if(!field.value.trim())return 'Required';
+      if(field.name==='work_email'&&!field.validity.valid)return 'Enter a valid work email.';
+      if(field.name==='phone_number'&&!field.validity.valid)return 'Enter a valid phone number with country code.';
+      return '';
+    }
+    function setFieldError(form,field,message){
+      const error=form.querySelector('[data-field-error="'+field.name+'"]');
+      if(!error)return;
+      error.textContent=message;
+      error.hidden=!message;
+      if(message)field.setAttribute('aria-invalid','true');else field.removeAttribute('aria-invalid');
+    }
+    function updateRoleDetailsError(form){
+      const error=form.querySelector('[data-role-details-error]');
+      if(error)error.hidden=!!(form.elements.project_details.value.trim()||form.elements.jd_file.files[0]);
+    }
+    content.addEventListener('input',e=>{
+      const form=e.target.closest('form[data-form="employer"]');
+      if(!form)return;
+      if(requiredFieldNames.includes(e.target.name))setFieldError(form,e.target,getRequiredFieldError(e.target));
+      if(e.target.name==='project_details')updateRoleDetailsError(form);
+    });
+    content.addEventListener('change',e=>{
+      const form=e.target.closest('form[data-form="employer"]');
+      if(form&&(e.target.name==='jd_file'||e.target.name==='project_details'))updateRoleDetailsError(form);
+    });
+    content.addEventListener('submit',async e=>{
       const form=e.target.closest('form[data-form]');
       if(!form)return;
       e.preventDefault();
@@ -139,11 +168,26 @@
         content.innerHTML='<div style="text-align:center;padding:16px 4px"><div class="match-icon" style="margin:0 auto 16px">✓</div><h3 id="modalTitle">Request received</h3><p>Thanks for sharing your staffing need. Our team will review it and follow up about next steps.</p><button class="btn modal-action" data-close>Done</button></div>';
       };
       if(form.elements.website.value.trim()){success();return}
+      errorMessage.hidden=true;
       const values=new FormData(form);
       const value=name=>String(values.get(name)||'').trim();
       const jdFile=form.elements.jd_file.files[0]||null;
       const projectDetails=value('project_details');
-      if(!projectDetails&&!jdFile){errorMessage.textContent='Add project details or attach the role description file.';errorMessage.hidden=false;return}
+      let firstInvalidField=null;
+      for(const name of requiredFieldNames){
+        const field=form.elements.namedItem(name);
+        const message=getRequiredFieldError(field);
+        setFieldError(form,field,message);
+        if(message&&!firstInvalidField)firstInvalidField=field;
+      }
+      const roleDetailsError=form.querySelector('[data-role-details-error]');
+      const missingRoleDetails=!projectDetails&&!jdFile;
+      roleDetailsError.hidden=!missingRoleDetails;
+      if(firstInvalidField||missingRoleDetails){
+        if(firstInvalidField){firstInvalidField.focus({preventScroll:true});firstInvalidField.scrollIntoView({block:'center',behavior:'smooth'})}
+        else roleDetailsError.scrollIntoView({block:'center',behavior:'smooth'});
+        return;
+      }
       const fileExtension=jdFile?.name.split('.').pop().toLowerCase()||'';
       const mimeByExtension={pdf:'application/pdf',doc:'application/msword',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'};
       if(jdFile&&(jdFile.size>10*1024*1024||!mimeByExtension[fileExtension]||(jdFile.type&&jdFile.type!==mimeByExtension[fileExtension]))){errorMessage.textContent='Choose a PDF, DOC or DOCX file up to 10 MB.';errorMessage.hidden=false;return}
