@@ -20,7 +20,7 @@
   </section>
 </main>
 <script>
-const SUPABASE_URL='https://ttmkcmeqiawrzbvymhal.supabase.co',KEY='sb_publishable_kYY2o5gsLpUww-bgH0Az4A_nQhdMiaN',CLIENT_KEY='benchpro_candidate_session',STAFF_KEY='benchpro_staff_session',managementId=new URLSearchParams(location.search).get('manage');
+const SUPABASE_URL='https://ttmkcmeqiawrzbvymhal.supabase.co',KEY='sb_publishable_kYY2o5gsLpUww-bgH0az4A_nQhdMiaN',CLIENT_KEY='benchpro_candidate_session',STAFF_KEY='benchpro_staff_session',managementId=new URLSearchParams(location.search).get('manage');
 const $=id=>document.getElementById(id),authView=$('authView'),dashboard=$('dashboard'),authFeedback=$('authFeedback'),pageFeedback=$('pageFeedback');
 let session=null,client=null,members=[],roles=[],domains=[],isStaffMode=false,actorMembership=null;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
