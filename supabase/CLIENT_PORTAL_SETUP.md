@@ -10,7 +10,7 @@ Run `supabase/migrations/20261013120000_client_dashboard_access.sql` once in the
 
 Deploy `supabase/functions/client-access/index.ts` as the `client-access` Edge Function. Supabase supplies `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` to hosted functions. Set the additional secret `APP_SITE_URL` to the production origin, currently `https://benchpro.in`.
 
-The function is configured to require a signed-in user. It only lets BenchPro staff approve/remove domains or invite/restore client superusers; a client superuser can invite same-domain team members and remove their client membership. Removing a member never deletes their Auth account. If they have assigned roles, removal requires transferring those roles to an active teammate.
+The function is configured to require a signed-in user. It only lets BenchPro staff approve/remove domains, load the staff recovery workspace, or invite/restore client superusers; a client superuser can invite same-domain team members and remove their client membership. Removing a member never deletes their Auth account. If they have assigned roles, removal requires transferring those roles to an active teammate. Staff recovery reads use the function's service role only after checking the signed-in account against the BenchPro staff allowlist, so the staff recovery view does not depend on browser-side client-table RLS access.
 
 ## Allow invite redirects
 

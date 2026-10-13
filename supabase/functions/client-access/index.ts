@@ -35,6 +35,22 @@ Deno.serve(async (request) => {
     const clientId = String(body.client_id || "");
     if (!/^[0-9a-f-]{36}$/i.test(clientId)) return reply({ error: "Choose a valid client." }, 400);
 
+    if (action === "get_staff_workspace") {
+      if (!isStaff) return reply({ error: "This account is not authorized for BenchPro staff recovery." }, 403);
+      const [clientResult, membershipsResult, domainsResult, rolesResult] = await Promise.all([
+        db.from("clients").select("id,company_name,company_size,business_type").eq("id", clientId).maybeSingle(),
+        db.from("client_memberships").select("id,client_id,user_id,email,role,status,created_at").eq("client_id", clientId).order("created_at", { ascending: true }),
+        db.from("client_email_domains").select("domain").eq("client_id", clientId),
+        db.from("staffing_requests").select("id,client_id,role_or_skills,project_duration,target_start_date,project_details,status,created_at,jd_file_path,jd_file_name,client_assignee_membership_id").eq("client_id", clientId).order("created_at", { ascending: false }),
+      ]);
+      if (clientResult.error) throw clientResult.error;
+      if (!clientResult.data) return reply({ error: "Client record not found." }, 404);
+      if (membershipsResult.error) throw membershipsResult.error;
+      if (domainsResult.error) throw domainsResult.error;
+      if (rolesResult.error) throw rolesResult.error;
+      return reply({ ok: true, client: clientResult.data, memberships: membershipsResult.data || [], domains: domainsResult.data || [], roles: rolesResult.data || [] });
+    }
+
     if (action === "add_domain") {
       if (!isStaff) return reply({ error: "Only BenchPro staff can approve a client email domain." }, 403);
       const approvedDomain = String(body.domain || "").trim().toLowerCase().replace(/^@/, "");
