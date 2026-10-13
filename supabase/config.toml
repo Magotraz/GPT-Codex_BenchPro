@@ -1,0 +1,4 @@
+project_id = "ttmkcmeqiawrzbvymhal"
+
+[functions.client-access]
+verify_jwt = true
