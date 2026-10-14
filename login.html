@@ -6,25 +6,84 @@
   <meta name="theme-color" content="#f7f9f6">
   <title>Log in | BenchPro</title>
   <style>
-    :root{--ink:#18352d;--muted:#6d7c75;--line:#e4ebe4;--green:#204438;--lime:#c5ed75;--bg:#f7f9f6;--red:#a33232}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input{font:inherit}a,button{cursor:pointer}.shell{width:min(1120px,calc(100% - 36px));margin:auto}header{background:#fff;border-bottom:1px solid var(--line)}.top{height:72px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:800;font-size:21px;color:var(--green);text-decoration:none;letter-spacing:-.6px}main{padding:34px 0 70px}.login-card,.choice-card{background:white;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 8px 28px #1e3e2c0a}.login-card{max-width:440px;margin:45px auto}.choice-card{max-width:620px;margin:45px auto}.eyebrow{text-transform:uppercase;letter-spacing:1.1px;color:#76934d;font-size:11px;font-weight:800}h1{font-size:27px;letter-spacing:-.8px;margin:5px 0 3px}.subtitle{color:var(--muted);margin:0 0 20px}.field{display:grid;gap:6px;margin:14px 0}.field label{font-size:12px;font-weight:700;color:#596b62}.field input{width:100%;border:1px solid var(--line);border-radius:9px;padding:11px 12px;background:#fff;color:var(--ink)}.button{border:0;border-radius:10px;background:var(--green);color:white;padding:11px 16px;font-weight:700}.button:disabled{opacity:.55;cursor:wait}.link-button{border:0;background:none;padding:8px 0;color:#426a31;font-size:13px;font-weight:700;text-decoration:underline}.feedback{padding:11px 13px;border-radius:9px;background:#f2f6ec;color:#385c31;font-size:13px;margin:14px 0}.feedback.error{background:#fff0ee;color:var(--red)}.feedback[hidden],[hidden]{display:none!important}.small{font-size:12px;color:var(--muted)}.role-list{display:grid;gap:10px;margin-top:18px}.role-choice{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;padding:15px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);text-align:left}.role-choice:hover{border-color:#9fb68b;background:#fbfcf8}.role-choice strong,.role-choice span{display:block}.role-choice span{font-size:12px;color:var(--muted)}.role-choice b{color:#4f7138;font-size:20px}@media(max-width:520px){.login-card,.choice-card{padding:20px;margin:25px auto}.shell{width:calc(100% - 28px)}}
+    :root{--ink:#18352d;--muted:#6d7c75;--line:#e4ebe4;--green:#204438;--lime:#c5ed75;--bg:#f7f9f6;--red:#a33232}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    button,input{font:inherit}a,button{cursor:pointer}
+    .shell{width:min(1160px,calc(100% - 48px));margin:auto}
+    header{background:#fff;border-bottom:1px solid var(--line)}
+    .top{height:72px;display:flex;align-items:center;justify-content:space-between}
+    .brand{font-weight:800;font-size:21px;color:var(--green);text-decoration:none;letter-spacing:-.6px}
+    main{padding:40px 0 72px}
+    .auth-layout{display:grid;grid-template-columns:1fr 1fr;min-height:610px;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 16px 50px #1e3e2c10}
+    .login-card{display:flex;flex-direction:column;justify-content:center;padding:clamp(34px,5vw,68px);background:#fff}
+    #recoveryView{max-width:560px;min-height:400px;margin:46px auto;border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 36px #1e3e2c0a}
+    .brand-panel{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding:clamp(34px,5vw,68px);background:radial-gradient(115% 120% at 100% 0%,#315b49 0%,#204438 55%,#17382f 100%);color:#fff}
+    .brand-panel:before,.brand-panel:after{position:absolute;z-index:-1;border:1px solid #ffffff20;border-radius:50%;content:""}
+    .brand-panel:before{width:390px;height:390px;right:-155px;top:-190px}
+    .brand-panel:after{width:300px;height:300px;right:-120px;bottom:-190px}
+    .eyebrow{text-transform:uppercase;letter-spacing:1.25px;color:#76934d;font-size:11px;font-weight:800}
+    .brand-panel .eyebrow{color:var(--lime)}
+    h1{font-size:clamp(30px,3vw,38px);line-height:1.15;letter-spacing:-1.1px;margin:8px 0 8px}
+    .subtitle{color:var(--muted);margin:0 0 28px;font-size:16px}
+    .field{display:grid;gap:8px;margin:18px 0}
+    .field label{font-size:13px;font-weight:700;color:#596b62}
+    .field input{width:100%;min-height:52px;border:1px solid var(--line);border-radius:11px;padding:13px 15px;background:#fff;color:var(--ink);font-size:16px}
+    .field input:focus{outline:3px solid #c5ed7560;border-color:#729453}
+    .form-actions{display:flex;align-items:center;gap:18px;margin-top:24px}
+    .button{min-height:48px;border:0;border-radius:10px;background:var(--green);color:white;padding:12px 22px;font-weight:750;font-size:15px}
+    .button:disabled{opacity:.55;cursor:wait}
+    .link-button{border:0;background:none;padding:8px 0;color:#426a31;font-size:13px;font-weight:700;text-decoration:underline}
+    .feedback{padding:11px 13px;border-radius:9px;background:#f2f6ec;color:#385c31;font-size:13px;margin:14px 0}
+    .feedback.error{background:#fff0ee;color:var(--red)}
+    .feedback[hidden],[hidden]{display:none!important}
+    .small{font-size:13px;color:var(--muted)}
+    .signup-note{margin:28px 0 0}
+    .brand-lead{max-width:460px;color:#dce9e2;font-size:16px;margin:8px 0 28px}
+    .benefits{display:grid;gap:13px;margin:0;padding:0;list-style:none}
+    .benefit{display:grid;grid-template-columns:34px 1fr;align-items:start;gap:12px;color:#f5f8f5}
+    .benefit-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#c5ed7520;color:var(--lime);font-weight:800}
+    .benefit strong{display:block;font-size:14px;margin:0 0 2px}
+    .benefit span:last-child{color:#c0d3ca;font-size:13px}
+    .choice-card{max-width:700px;margin:45px auto;background:white;border:1px solid var(--line);border-radius:16px;padding:32px;box-shadow:0 8px 28px #1e3e2c0a}
+    .role-list{display:grid;gap:10px;margin-top:18px}
+    .role-choice{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;padding:15px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);text-align:left}
+    .role-choice:hover{border-color:#9fb68b;background:#fbfcf8}
+    .role-choice strong,.role-choice span{display:block}
+    .role-choice span{font-size:12px;color:var(--muted)}
+    .role-choice b{color:#4f7138;font-size:20px}
+    @media(max-width:760px){.shell{width:min(620px,calc(100% - 28px))}.auth-layout{grid-template-columns:1fr;min-height:0}.login-card{padding:38px 30px}.brand-panel{padding:38px 30px}.brand-panel h1{font-size:32px}.benefits{gap:11px}main{padding-top:24px}}
+    @media(max-width:420px){.shell{width:calc(100% - 20px)}.login-card,.brand-panel{padding:30px 22px}.auth-layout{border-radius:16px}.form-actions{gap:14px;flex-wrap:wrap}.signup-note{margin-top:22px}}
   </style>
 </head>
 <body>
   <header><div class="shell top"><a class="brand" href="/">BenchPro</a></div></header>
   <main class="shell">
-    <section id="loginView" class="login-card">
-      <span class="eyebrow">BenchPro account</span>
-      <h1>Sign in</h1>
-      <p class="subtitle">Use the same BenchPro account for your candidate profile and client workspace.</p>
-      <form id="loginForm">
-        <div class="field"><label for="email">Email address</label><input id="email" type="email" autocomplete="username" required></div>
-        <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></div>
-        <button id="loginButton" class="button" type="submit">Log in</button>
-        <button id="forgotPassword" class="link-button" type="button">Forgot password?</button>
-      </form>
-      <div id="feedback" class="feedback" hidden aria-live="polite"></div>
-      <p class="small">New to BenchPro? <a class="link-button" href="candidate.html">Create a candidate profile</a></p>
-    </section>
+    <div class="auth-layout" id="loginLayout">
+      <section id="loginView" class="login-card">
+        <span class="eyebrow">BenchPro account</span>
+        <h1>Sign in</h1>
+        <p class="subtitle">Log in to continue to BenchPro.</p>
+        <form id="loginForm">
+          <div class="field"><label for="email">Email address</label><input id="email" type="email" autocomplete="username" required></div>
+          <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></div>
+          <div class="form-actions"><button id="loginButton" class="button" type="submit">Log in</button><button id="forgotPassword" class="link-button" type="button">Forgot password?</button></div>
+        </form>
+        <div id="feedback" class="feedback" hidden aria-live="polite"></div>
+        <p class="small signup-note">New to BenchPro? <a class="link-button" href="candidate.html">Create a candidate profile</a></p>
+      </section>
+      <aside class="brand-panel" aria-labelledby="brandHeadline">
+        <span class="eyebrow">Project staffing, made simple</span>
+        <h1 id="brandHeadline">Your project needs.<br>Our people.</h1>
+        <p class="brand-lead">Connecting ambitious teams with technology professionals ready to make an impact.</p>
+        <ul class="benefits">
+          <li class="benefit"><span class="benefit-icon" aria-hidden="true">✓</span><span><strong>Shortlists shaped around your needs</strong><span>Clients get specialists matched to the work ahead.</span></span></li>
+          <li class="benefit"><span class="benefit-icon" aria-hidden="true">✓</span><span><strong>Project opportunities that fit</strong><span>Professionals can find work aligned with their skills.</span></span></li>
+          <li class="benefit"><span class="benefit-icon" aria-hidden="true">✓</span><span><strong>A thoughtful introduction</strong><span>BenchPro supports both sides from role brief to shortlist.</span></span></li>
+          <li class="benefit"><span class="benefit-icon" aria-hidden="true">✓</span><span><strong>Profiles shared with care</strong><span>Candidate profiles reach clients through the shortlist process.</span></span></li>
+        </ul>
+      </aside>
+    </div>
     <section id="destinationView" class="choice-card" hidden>
       <span class="eyebrow">BenchPro account</span>
       <h1>Where would you like to go?</h1>
@@ -43,7 +102,7 @@
   </main>
   <script>
     const SUPABASE_URL='https://ttmkcmeqiawrzbvymhal.supabase.co',KEY='sb_publishable_kYY2o5gsLpUww-bgH0az4A_nQhdMiaN',SESSION_KEY='benchpro_candidate_session';
-    const $=id=>document.getElementById(id),loginView=$('loginView'),destinationView=$('destinationView'),recoveryView=$('recoveryView');
+    const $=id=>document.getElementById(id),loginLayout=$('loginLayout'),loginView=$('loginView'),destinationView=$('destinationView'),recoveryView=$('recoveryView');
     let session=null;
     function getSession(){try{return JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null')}catch{return null}}
     function saveSession(value){sessionStorage.setItem(SESSION_KEY,JSON.stringify(value))}
@@ -53,8 +112,8 @@
     async function api(path,token){return fetch(SUPABASE_URL+'/rest/v1/'+path,{headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'}})}
     function gotoCandidate(){location.replace('candidate.html')}
     function gotoClient(clientId){location.replace('client.html?client_id='+encodeURIComponent(clientId))}
-    function showLogin(text='',error=false){loginView.hidden=false;destinationView.hidden=true;recoveryView.hidden=true;message($('feedback'),text,error)}
-    function showDestinations(options){loginView.hidden=true;destinationView.hidden=false;recoveryView.hidden=true;const list=$('destinations');list.replaceChildren();for(const option of options){const button=document.createElement('button');button.className='role-choice';button.type='button';button.innerHTML='<span><strong></strong><span></span></span><b>→</b>';button.querySelector('strong').textContent=option.title;button.querySelector('span span').textContent=option.detail;button.addEventListener('click',option.go);list.append(button)}}
+    function showLogin(text='',error=false){loginLayout.hidden=false;destinationView.hidden=true;recoveryView.hidden=true;message($('feedback'),text,error)}
+    function showDestinations(options){loginLayout.hidden=true;destinationView.hidden=false;recoveryView.hidden=true;const list=$('destinations');list.replaceChildren();for(const option of options){const button=document.createElement('button');button.className='role-choice';button.type='button';button.innerHTML='<span><strong></strong><span></span></span><b>→</b>';button.querySelector('strong').textContent=option.title;button.querySelector('span span').textContent=option.detail;button.addEventListener('click',option.go);list.append(button)}}
     async function routeAccount(current){
       session=current;saveSession(session);const token=session.access_token,user=session.user;
       const membershipParams=new URLSearchParams({select:'id,client_id,role,status,user_id',user_id:'eq.'+user.id,status:'eq.active',order:'created_at.asc'});
@@ -72,7 +131,7 @@
     $('forgotPassword').addEventListener('click',async()=>{const email=$('email').value.trim().toLowerCase();if(!email){message($('feedback'),'Enter your email address first.',true);$('email').focus();return}try{const redirect=location.origin+location.pathname,response=await auth('recover?redirect_to='+encodeURIComponent(redirect),{email});if(!response.ok){const result=await response.json();throw new Error(result.msg||result.message||'Could not send the password reset email.')}message($('feedback'),'If an account exists for that address, a password reset link is on its way.')}catch(error){message($('feedback'),error.message,true)}});
     $('recoveryForm').addEventListener('submit',async event=>{event.preventDefault();const password=$('newPassword').value;if(!(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9\s]).{6,}$/.test(password))){message($('recoveryFeedback'),'Use at least 6 characters, including a letter, a number, and a special character.',true);return}try{const response=await fetch(SUPABASE_URL+'/auth/v1/user',{method:'PUT',headers:{apikey:KEY,Authorization:'Bearer '+session.access_token,'Content-Type':'application/json'},body:JSON.stringify({password})}),result=await response.json();if(!response.ok)throw new Error(result.msg||result.message||'Could not update your password. Request a new reset link and try again.');clearSession();session=null;history.replaceState(null,'',location.pathname);showLogin('Password updated. Sign in with your new password.')}catch(error){message($('recoveryFeedback'),error.message,true)}});
     $('signOutButton').addEventListener('click',async()=>{try{if(session?.access_token)await auth('logout',{},session.access_token)}catch{}clearSession();session=null;showLogin()});
-    (async()=>{const hash=new URLSearchParams(location.hash.slice(1)),error=hash.get('error_code')||hash.get('error');if(error){history.replaceState(null,'',location.pathname);clearSession();showLogin('This link could not be verified. Request a new password reset link and try again.',true);return}if(hash.has('access_token')&&hash.has('refresh_token')){session={access_token:hash.get('access_token'),refresh_token:hash.get('refresh_token'),expires_at:Math.floor(Date.now()/1000)+Number(hash.get('expires_in')||3600)};saveSession(session);try{const response=await fetch(SUPABASE_URL+'/auth/v1/user',{headers:{apikey:KEY,Authorization:'Bearer '+session.access_token}});if(!response.ok)throw new Error('Could not verify this link. Please try again.');session.user=await response.json();saveSession(session);history.replaceState(null,'',location.pathname);if(hash.get('type')==='recovery'){loginView.hidden=true;destinationView.hidden=true;recoveryView.hidden=false}else await routeAccount(session)}catch(caught){clearSession();session=null;showLogin(caught.message,true)}return}const existing=getSession();if(existing?.access_token){session=existing;try{if(!session.user?.id){const response=await fetch(SUPABASE_URL+'/auth/v1/user',{headers:{apikey:KEY,Authorization:'Bearer '+session.access_token}});if(!response.ok)throw new Error('Your session has expired. Sign in again.');session.user=await response.json();saveSession(session)}await routeAccount(session);return}catch(caught){clearSession();session=null;showLogin(caught.message,true);return}}showLogin()})();
+    (async()=>{const hash=new URLSearchParams(location.hash.slice(1)),error=hash.get('error_code')||hash.get('error');if(error){history.replaceState(null,'',location.pathname);clearSession();showLogin('This link could not be verified. Request a new password reset link and try again.',true);return}if(hash.has('access_token')&&hash.has('refresh_token')){session={access_token:hash.get('access_token'),refresh_token:hash.get('refresh_token'),expires_at:Math.floor(Date.now()/1000)+Number(hash.get('expires_in')||3600)};saveSession(session);try{const response=await fetch(SUPABASE_URL+'/auth/v1/user',{headers:{apikey:KEY,Authorization:'Bearer '+session.access_token}});if(!response.ok)throw new Error('Could not verify this link. Please try again.');session.user=await response.json();saveSession(session);history.replaceState(null,'',location.pathname);if(hash.get('type')==='recovery'){loginLayout.hidden=true;destinationView.hidden=true;recoveryView.hidden=false}else await routeAccount(session)}catch(caught){clearSession();session=null;showLogin(caught.message,true)}return}const existing=getSession();if(existing?.access_token){session=existing;try{if(!session.user?.id){const response=await fetch(SUPABASE_URL+'/auth/v1/user',{headers:{apikey:KEY,Authorization:'Bearer '+session.access_token}});if(!response.ok)throw new Error('Your session has expired. Sign in again.');session.user=await response.json();saveSession(session)}await routeAccount(session);return}catch(caught){clearSession();session=null;showLogin(caught.message,true);return}}showLogin()})();
   </script>
 </body>
 </html>
