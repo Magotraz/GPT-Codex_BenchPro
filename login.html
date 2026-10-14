@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f9f6">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&display=swap" rel="stylesheet">
   <title>Log in | BenchPro</title>
   <style>
     :root{--ink:#18352d;--muted:#6d7c75;--line:#e4ebe4;--green:#204438;--lime:#c5ed75;--bg:#f7f9f6;--red:#a33232}
@@ -24,7 +25,8 @@
     .brand-panel:after{width:300px;height:300px;right:-120px;bottom:-190px}
     .eyebrow{text-transform:uppercase;letter-spacing:1.25px;color:#76934d;font-size:11px;font-weight:800}
     .brand-panel .eyebrow{color:#6f8b45}
-    h1{font-size:clamp(30px,3vw,38px);line-height:1.15;letter-spacing:-1.1px;margin:8px 0 8px}
+    .brand-panel h1{font-family:Manrope,ui-sans-serif,system-ui,sans-serif;font-size:clamp(34px,3.6vw,48px);font-weight:700;line-height:1.06;letter-spacing:-2.4px;margin:8px 0;max-width:560px}
+    .brand-panel h1 em{font-style:normal;color:#6f9d4b}
     .subtitle{color:var(--muted);margin:0 0 28px;font-size:16px}
     .field{display:grid;gap:8px;margin:18px 0}
     .field label{font-size:13px;font-weight:700;color:#596b62}
@@ -51,7 +53,7 @@
     .role-choice strong,.role-choice span{display:block}
     .role-choice span{font-size:12px;color:var(--muted)}
     .role-choice b{color:#4f7138;font-size:20px}
-    @media(max-width:760px){.shell{width:min(620px,calc(100% - 28px))}.auth-layout{grid-template-columns:1fr;min-height:0}.login-card{padding:38px 30px}.brand-panel{padding:38px 30px;border-left:0;border-top:1px solid #e2e7e2}.brand-panel h1{font-size:32px}.benefits{gap:11px}main{padding-top:24px}}
+    @media(max-width:760px){.shell{width:min(620px,calc(100% - 28px))}.auth-layout{grid-template-columns:1fr;min-height:0}.login-card{padding:38px 30px}.brand-panel{padding:38px 30px;border-left:0;border-top:1px solid #e2e7e2}.brand-panel h1{font-size:clamp(32px,7vw,42px);letter-spacing:-1.8px}.benefits{gap:11px}main{padding-top:24px}}
     @media(max-width:420px){.shell{width:calc(100% - 20px)}.login-card,.brand-panel{padding:30px 22px}.auth-layout{border-radius:16px}.form-actions{gap:14px;flex-wrap:wrap}.signup-note{margin-top:22px}}
   </style>
 </head>
@@ -72,8 +74,7 @@
         <p class="small signup-note">New to BenchPro? <a class="link-button" href="candidate.html">Create a candidate profile</a></p>
       </section>
       <aside class="brand-panel" aria-labelledby="brandHeadline">
-        <span class="eyebrow">Project staffing, made simple</span>
-        <h1 id="brandHeadline">Your Projects.<br>Our Talent.</h1>
+        <h1 id="brandHeadline">Project staffing,<br><em>made simple.</em></h1>
         <p class="brand-lead">Bringing the right talent to every project.</p>
         <ul class="benefits">
           <li class="benefit"><span class="benefit-icon" aria-hidden="true">✓</span><span>Find the right talent, faster.</span></li>
