@@ -122,7 +122,7 @@
       }
       wrap.classList.add('open')
     }
-    document.body.addEventListener('click',e=>{const trigger=e.target.closest('[data-modal]');if(trigger){e.preventDefault();openJoin(trigger.dataset.modal)}if(e.target===wrap||e.target.closest('.modal-close'))wrap.classList.remove('open')});const requiredFieldNames=['contact_name','designation','company_name','work_email','phone_number','role_or_skills'];
+    document.body.addEventListener('click',e=>{const trigger=e.target.closest('[data-modal]');if(trigger){e.preventDefault();openJoin(trigger.dataset.modal)}if(e.target===wrap||e.target.closest('.modal-close'))wrap.classList.remove('open')});if(new URLSearchParams(window.location.search).get('flow')==='company')openJoin('employer');const requiredFieldNames=['contact_name','designation','company_name','work_email','phone_number','role_or_skills'];
     function getRequiredFieldError(field){
       if(!field.value.trim())return 'Required';
       if(field.name==='work_email'&&!field.validity.valid)return 'Enter a valid work email.';
