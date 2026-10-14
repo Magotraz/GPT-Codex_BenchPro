@@ -18,12 +18,12 @@
     .auth-layout{display:grid;grid-template-columns:1fr 1fr;min-height:610px;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 16px 50px #1e3e2c10}
     .login-card{display:flex;flex-direction:column;justify-content:center;padding:clamp(34px,5vw,68px);background:#fff}
     #recoveryView{max-width:560px;min-height:400px;margin:46px auto;border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 36px #1e3e2c0a}
-    .brand-panel{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding:clamp(34px,5vw,68px);background:radial-gradient(115% 120% at 100% 0%,#315b49 0%,#204438 55%,#17382f 100%);color:#fff}
-    .brand-panel:before,.brand-panel:after{position:absolute;z-index:-1;border:1px solid #ffffff20;border-radius:50%;content:""}
+    .brand-panel{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding:clamp(34px,5vw,68px);background:#fbfcfa;border-left:1px solid #e2e7e2;color:var(--ink)}
+    .brand-panel:before,.brand-panel:after{position:absolute;z-index:-1;border:1px solid #18352d0b;border-radius:50%;content:""}
     .brand-panel:before{width:390px;height:390px;right:-155px;top:-190px}
     .brand-panel:after{width:300px;height:300px;right:-120px;bottom:-190px}
     .eyebrow{text-transform:uppercase;letter-spacing:1.25px;color:#76934d;font-size:11px;font-weight:800}
-    .brand-panel .eyebrow{color:var(--lime)}
+    .brand-panel .eyebrow{color:#6f8b45}
     h1{font-size:clamp(30px,3vw,38px);line-height:1.15;letter-spacing:-1.1px;margin:8px 0 8px}
     .subtitle{color:var(--muted);margin:0 0 28px;font-size:16px}
     .field{display:grid;gap:8px;margin:18px 0}
@@ -39,12 +39,12 @@
     .feedback[hidden],[hidden]{display:none!important}
     .small{font-size:13px;color:var(--muted)}
     .signup-note{margin:28px 0 0}
-    .brand-lead{max-width:460px;color:#dce9e2;font-size:16px;margin:8px 0 28px}
+    .brand-lead{max-width:460px;color:#65746d;font-size:16px;margin:8px 0 28px}
     .benefits{display:grid;gap:13px;margin:0;padding:0;list-style:none}
-    .benefit{display:grid;grid-template-columns:34px 1fr;align-items:start;gap:12px;color:#f5f8f5}
-    .benefit-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#c5ed7520;color:var(--lime);font-weight:800}
+    .benefit{display:grid;grid-template-columns:34px 1fr;align-items:start;gap:12px;color:var(--ink)}
+    .benefit-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#e7f2d8;color:#315b2e;font-weight:800}
     .benefit strong{display:block;font-size:14px;margin:0 0 2px}
-    .benefit span:last-child{color:#c0d3ca;font-size:13px}
+    .benefit span:last-child{color:#66756d;font-size:13px}
     .choice-card{max-width:700px;margin:45px auto;background:white;border:1px solid var(--line);border-radius:16px;padding:32px;box-shadow:0 8px 28px #1e3e2c0a}
     .role-list{display:grid;gap:10px;margin-top:18px}
     .role-choice{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;padding:15px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);text-align:left}
@@ -52,7 +52,7 @@
     .role-choice strong,.role-choice span{display:block}
     .role-choice span{font-size:12px;color:var(--muted)}
     .role-choice b{color:#4f7138;font-size:20px}
-    @media(max-width:760px){.shell{width:min(620px,calc(100% - 28px))}.auth-layout{grid-template-columns:1fr;min-height:0}.login-card{padding:38px 30px}.brand-panel{padding:38px 30px}.brand-panel h1{font-size:32px}.benefits{gap:11px}main{padding-top:24px}}
+    @media(max-width:760px){.shell{width:min(620px,calc(100% - 28px))}.auth-layout{grid-template-columns:1fr;min-height:0}.login-card{padding:38px 30px}.brand-panel{padding:38px 30px;border-left:0;border-top:1px solid #e2e7e2}.brand-panel h1{font-size:32px}.benefits{gap:11px}main{padding-top:24px}}
     @media(max-width:420px){.shell{width:calc(100% - 20px)}.login-card,.brand-panel{padding:30px 22px}.auth-layout{border-radius:16px}.form-actions{gap:14px;flex-wrap:wrap}.signup-note{margin-top:22px}}
   </style>
 </head>
