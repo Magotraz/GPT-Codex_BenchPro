@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f9f6">
+  <title>Log in | BenchPro</title>
+  <style>
+    :root{--ink:#18352d;--muted:#6d7c75;--line:#e4ebe4;--green:#204438;--lime:#c5ed75;--bg:#f7f9f6;--red:#a33232}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input{font:inherit}a,button{cursor:pointer}.shell{width:min(1120px,calc(100% - 36px));margin:auto}header{background:#fff;border-bottom:1px solid var(--line)}.top{height:72px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:800;font-size:21px;color:var(--green);text-decoration:none;letter-spacing:-.6px}main{padding:34px 0 70px}.login-card,.choice-card{background:white;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 8px 28px #1e3e2c0a}.login-card{max-width:440px;margin:45px auto}.choice-card{max-width:620px;margin:45px auto}.eyebrow{text-transform:uppercase;letter-spacing:1.1px;color:#76934d;font-size:11px;font-weight:800}h1{font-size:27px;letter-spacing:-.8px;margin:5px 0 3px}.subtitle{color:var(--muted);margin:0 0 20px}.field{display:grid;gap:6px;margin:14px 0}.field label{font-size:12px;font-weight:700;color:#596b62}.field input{width:100%;border:1px solid var(--line);border-radius:9px;padding:11px 12px;background:#fff;color:var(--ink)}.button{border:0;border-radius:10px;background:var(--green);color:white;padding:11px 16px;font-weight:700}.button:disabled{opacity:.55;cursor:wait}.link-button{border:0;background:none;padding:8px 0;color:#426a31;font-size:13px;font-weight:700;text-decoration:underline}.feedback{padding:11px 13px;border-radius:9px;background:#f2f6ec;color:#385c31;font-size:13px;margin:14px 0}.feedback.error{background:#fff0ee;color:var(--red)}.feedback[hidden],[hidden]{display:none!important}.small{font-size:12px;color:var(--muted)}.role-list{display:grid;gap:10px;margin-top:18px}.role-choice{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;padding:15px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);text-align:left}.role-choice:hover{border-color:#9fb68b;background:#fbfcf8}.role-choice strong,.role-choice span{display:block}.role-choice span{font-size:12px;color:var(--muted)}.role-choice b{color:#4f7138;font-size:20px}@media(max-width:520px){.login-card,.choice-card{padding:20px;margin:25px auto}.shell{width:calc(100% - 28px)}}
+  </style>
+</head>
+<body>
+  <header><div class="shell top"><a class="brand" href="/">BenchPro</a></div></header>
+  <main class="shell">
+    <section id="loginView" class="login-card">
+      <span class="eyebrow">BenchPro account</span>
+      <h1>Sign in</h1>
+      <p class="subtitle">Use the same BenchPro account for your candidate profile and client workspace.</p>
+      <form id="loginForm">
+        <div class="field"><label for="email">Email address</label><input id="email" type="email" autocomplete="username" required></div>
+        <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></div>
+        <button id="loginButton" class="button" type="submit">Log in</button>
+        <button id="forgotPassword" class="link-button" type="button">Forgot password?</button>
+      </form>
+      <div id="feedback" class="feedback" hidden aria-live="polite"></div>
+      <p class="small">New to BenchPro? <a class="link-button" href="candidate.html">Create a candidate profile</a></p>
+    </section>
+    <section id="destinationView" class="choice-card" hidden>
+      <span class="eyebrow">BenchPro account</span>
+      <h1>Where would you like to go?</h1>
+      <p class="subtitle">This account has more than one BenchPro workspace.</p>
+      <div id="destinations" class="role-list"></div>
+      <button id="signOutButton" class="link-button" type="button">Sign out</button>
+      <div id="destinationFeedback" class="feedback" hidden aria-live="polite"></div>
+    </section>
+    <section id="recoveryView" class="login-card" hidden>
+      <span class="eyebrow">BenchPro account</span>
+      <h1>Choose a new password</h1>
+      <p class="subtitle">Set a new password to continue to your BenchPro account.</p>
+      <form id="recoveryForm"><div class="field"><label for="newPassword">New password</label><input id="newPassword" type="password" minlength="6" autocomplete="new-password" required></div><p class="small">Use at least 6 characters, including a letter, a number, and a special character.</p><button class="button" type="submit">Update password</button></form>
+      <div id="recoveryFeedback" class="feedback" hidden aria-live="polite"></div>
+    </section>
+  </main>
+  <script>
+    const SUPABASE_URL='https://ttmkcmeqiawrzbvymhal.supabase.co',KEY='sb_publishable_kYY2o5gsLpUww-bgH0az4A_nQhdMiaN',SESSION_KEY='benchpro_candidate_session';
+    const $=id=>document.getElementById(id),loginView=$('loginView'),destinationView=$('destinationView'),recoveryView=$('recoveryView');
+    let session=null;
+    function getSession(){try{return JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null')}catch{return null}}
+    function saveSession(value){sessionStorage.setItem(SESSION_KEY,JSON.stringify(value))}
+    function clearSession(){sessionStorage.removeItem(SESSION_KEY)}
+    function message(node,text,error=false){node.textContent=text;node.hidden=!text;node.classList.toggle('error',error)}
+    async function auth(path,payload,token){return fetch(SUPABASE_URL+'/auth/v1/'+path,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+(token||KEY),'Content-Type':'application/json'},body:JSON.stringify(payload)})}
+    async function api(path,token){return fetch(SUPABASE_URL+'/rest/v1/'+path,{headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'}})}
+    function gotoCandidate(){location.replace('candidate.html')}
+    function gotoClient(clientId){location.replace('client.html?client_id='+encodeURIComponent(clientId))}
+    function showLogin(text='',error=false){loginView.hidden=false;destinationView.hidden=true;recoveryView.hidden=true;message($('feedback'),text,error)}
+    function showDestinations(options){loginView.hidden=true;destinationView.hidden=false;recoveryView.hidden=true;const list=$('destinations');list.replaceChildren();for(const option of options){const button=document.createElement('button');button.className='role-choice';button.type='button';button.innerHTML='<span><strong></strong><span></span></span><b>→</b>';button.querySelector('strong').textContent=option.title;button.querySelector('span span').textContent=option.detail;button.addEventListener('click',option.go);list.append(button)}}
+    async function routeAccount(current){
+      session=current;saveSession(session);const token=session.access_token,user=session.user;
+      const membershipParams=new URLSearchParams({select:'id,client_id,role,status,user_id',user_id:'eq.'+user.id,status:'eq.active',order:'created_at.asc'});
+      const [candidateResponse,membershipResponse]=await Promise.all([api('candidate_accounts?select=id&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1',token),api('client_memberships?'+membershipParams.toString(),token)]);
+      if(!candidateResponse.ok||!membershipResponse.ok)throw new Error('Could not check your BenchPro workspaces. Please try again.');
+      const candidates=await candidateResponse.json(),memberships=await membershipResponse.json(),hasCandidate=candidates.length>0||user.user_metadata?.benchpro_role==='candidate'||memberships.length===0;
+      let clientOptions=[];
+      if(memberships.length){const ids=[...new Set(memberships.map(row=>row.client_id))],clientParams=new URLSearchParams({select:'id,company_name',id:'in.('+ids.join(',')+')'}),clientResponse=await api('clients?'+clientParams.toString(),token);if(!clientResponse.ok)throw new Error('Could not load your client workspace names. Please try again.');const clients=await clientResponse.json();clientOptions=memberships.map(member=>({id:member.client_id,title:clients.find(client=>client.id===member.client_id)?.company_name||'Client workspace',detail:member.role==='superuser'?'Client superuser':'Team member',go:()=>gotoClient(member.client_id)}))}
+      const options=[...(hasCandidate?[{title:'Candidate dashboard',detail:'Your private talent profile and applications',go:gotoCandidate}]:[]),...clientOptions];
+      if(options.length===1){options[0].go();return}
+      if(options.length>1){showDestinations(options);return}
+      clearSession();session=null;showLogin('No candidate profile or active client workspace is linked to this account. Ask your client superuser for access, or create a candidate profile.',true)
+    }
+    $('loginForm').addEventListener('submit',async event=>{event.preventDefault();const button=$('loginButton');button.disabled=true;button.textContent='Signing in…';message($('feedback'),'');try{const response=await auth('token?grant_type=password',{email:$('email').value.trim().toLowerCase(),password:$('password').value}),result=await response.json();if(!response.ok)throw new Error(result.msg||result.error_description||'Email or password not recognized. Check your details and try again.');result.expires_at=result.expires_at||Math.floor(Date.now()/1000)+(result.expires_in||3600);await routeAccount(result)}catch(error){showLogin(error.message||'Could not sign in. Please try again.',true)}finally{button.disabled=false;button.textContent='Log in'}});
+    $('forgotPassword').addEventListener('click',async()=>{const email=$('email').value.trim().toLowerCase();if(!email){message($('feedback'),'Enter your email address first.',true);$('email').focus();return}try{const redirect=location.origin+location.pathname,response=await auth('recover?redirect_to='+encodeURIComponent(redirect),{email});if(!response.ok){const result=await response.json();throw new Error(result.msg||result.message||'Could not send the password reset email.')}message($('feedback'),'If an account exists for that address, a password reset link is on its way.')}catch(error){message($('feedback'),error.message,true)}});
+    $('recoveryForm').addEventListener('submit',async event=>{event.preventDefault();const password=$('newPassword').value;if(!(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9\s]).{6,}$/.test(password))){message($('recoveryFeedback'),'Use at least 6 characters, including a letter, a number, and a special character.',true);return}try{const response=await fetch(SUPABASE_URL+'/auth/v1/user',{method:'PUT',headers:{apikey:KEY,Authorization:'Bearer '+session.access_token,'Content-Type':'application/json'},body:JSON.stringify({password})}),result=await response.json();if(!response.ok)throw new Error(result.msg||result.message||'Could not update your password. Request a new reset link and try again.');clearSession();session=null;history.replaceState(null,'',location.pathname);showLogin('Password updated. Sign in with your new password.')}catch(error){message($('recoveryFeedback'),error.message,true)}});
+    $('signOutButton').addEventListener('click',async()=>{try{if(session?.access_token)await auth('logout',{},session.access_token)}catch{}clearSession();session=null;showLogin()});
+    (async()=>{const hash=new URLSearchParams(location.hash.slice(1)),error=hash.get('error_code')||hash.get('error');if(error){history.replaceState(null,'',location.pathname);clearSession();showLogin('This link could not be verified. Request a new password reset link and try again.',true);return}if(hash.has('access_token')&&hash.has('refresh_token')){session={access_token:hash.get('access_token'),refresh_token:hash.get('refresh_token'),expires_at:Math.floor(Date.now()/1000)+Number(hash.get('expires_in')||3600)};saveSession(session);try{const response=await fetch(SUPABASE_URL+'/auth/v1/user',{headers:{apikey:KEY,Authorization:'Bearer '+session.access_token}});if(!response.ok)throw new Error('Could not verify this link. Please try again.');session.user=await response.json();saveSession(session);history.replaceState(null,'',location.pathname);if(hash.get('type')==='recovery'){loginView.hidden=true;destinationView.hidden=true;recoveryView.hidden=false}else await routeAccount(session)}catch(caught){clearSession();session=null;showLogin(caught.message,true)}return}const existing=getSession();if(existing?.access_token){session=existing;try{if(!session.user?.id){const response=await fetch(SUPABASE_URL+'/auth/v1/user',{headers:{apikey:KEY,Authorization:'Bearer '+session.access_token}});if(!response.ok)throw new Error('Your session has expired. Sign in again.');session.user=await response.json();saveSession(session)}await routeAccount(session);return}catch(caught){clearSession();session=null;showLogin(caught.message,true);return}}showLogin()})();
+  </script>
+</body>
+</html>

@@ -137,6 +137,39 @@ Deno.serve(async (request) => {
       return reply({ ok: true, message: replacementId ? "Membership removed; assigned roles moved to the selected teammate. Account and history retained." : "Membership removed. Account and history retained." });
     }
 
+    if (action === "request_email_change") {
+      if (isStaff || actorMembership?.role !== "superuser") {
+        return reply({ error: "Only this client's superuser can request an account email change." }, 403);
+      }
+      const targetEmail = String(body.email || "").trim().toLowerCase();
+      if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(targetEmail)) {
+        return reply({ error: "Enter a valid new work email." }, 400);
+      }
+      const { data: activeMemberships, error: activeMembershipsError } = await db
+        .from("client_memberships")
+        .select("client_id")
+        .eq("user_id", user.id)
+        .eq("status", "active");
+      if (activeMembershipsError) throw activeMembershipsError;
+      const membershipClientIds = [...new Set((activeMemberships || []).map((row) => row.client_id))];
+      const { data: approvedDomains, error: approvedDomainsError } = membershipClientIds.length
+        ? await db.from("client_email_domains").select("client_id,domain").in("client_id", membershipClientIds)
+        : { data: [], error: null };
+      if (approvedDomainsError) throw approvedDomainsError;
+      const targetDomain = targetEmail.split("@").at(-1)!;
+      if (membershipClientIds.some((id) => !approvedDomains?.some((row) => row.client_id === id && row.domain === targetDomain))) {
+        return reply({ error: "The new email domain must be approved for every client workspace linked to this account. Ask BenchPro Admin to approve it first." }, 403);
+      }
+      const updateResponse = await fetch(`${url}/auth/v1/user`, {
+        method: "PUT",
+        headers: { apikey: anonKey, Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ email: targetEmail }),
+      });
+      const updateResult = await updateResponse.json().catch(() => ({}));
+      if (!updateResponse.ok) return reply({ error: updateResult.msg || updateResult.message || "Could not request an email change." }, updateResponse.status);
+      return reply({ ok: true, message: "Check the new email inbox to verify the change. Your sign-in email updates after verification." });
+    }
+
     return reply({ error: "Unknown client access action." }, 400);
   } catch (error) {
     console.error("client-access failed", error);
