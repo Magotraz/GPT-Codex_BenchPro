@@ -20,22 +20,11 @@
     .welcome-card h2{font:800 clamp(30px,3.1vw,40px)/1.08 Manrope,sans-serif;letter-spacing:-1.8px;margin:7px 0 14px;max-width:500px}
     .welcome-card .signup-promo-copy{color:#65746d;line-height:1.55;font-size:13px;max-width:440px;margin:0}
     .signup-promo-heading{max-width:500px}
-    .signup-promo-details{width:100%;margin-top:36px}
-    .signup-profile-preview{max-width:390px;margin:32px 0 24px;padding:16px;background:#fff;border:1px solid #e8e9e2;border-radius:17px;box-shadow:0 14px 32px rgba(29,54,45,.12);transform:rotate(-1.6deg)}
-    .signup-preview-person{display:flex;align-items:center;gap:11px}
-    .signup-preview-avatar{width:36px;height:36px;flex:none;border-radius:50%;display:grid;place-items:center;background:#e7f2d8;color:#315b2e;font-size:12px;font-weight:800}
-    .signup-preview-identity{display:grid;gap:2px;min-width:0}
-    .signup-preview-identity strong{font-size:12px;color:#18352d}
-    .signup-preview-identity span{font-size:10px;color:#71807a}
-    .signup-preview-available{margin-left:auto;border-radius:20px;padding:5px 10px;background:#e8f1dc;color:#426a31;font-size:9px;font-weight:700;white-space:nowrap}
-    .signup-preview-skills{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 10px}
-    .signup-preview-skills span{border-radius:20px;padding:5px 8px;background:#f1f2ed;color:#34443d;font-size:9px;white-space:nowrap}
-    .signup-preview-status{border-top:1px solid #eceee8;padding-top:10px;color:#426a31;font-size:10px;font-weight:600}
-    .signup-preview-status span{margin-right:7px;font-weight:800}
-    .signup-steps{list-style:none;margin:8px 0 0;padding:0;display:flex;align-items:center;justify-content:space-between;gap:10px;color:#34443d;font-size:10px}
-    .signup-steps li{display:flex;align-items:center;gap:7px;white-space:nowrap}
-    .signup-steps li span:first-child{width:20px;height:20px;flex:none;display:grid;place-items:center;border-radius:50%;background:#1e3e35;color:#fff;font-size:10px;font-weight:700}
-    .signup-proof{border-top:1px solid #e5e5de;padding-top:13px;color:#71807a;font-size:10px;line-height:1.45}
+    .signup-promo-details{width:100%;flex:1;display:flex;flex-direction:column;justify-content:center;margin-top:36px}
+    .signup-steps{list-style:none;margin:0;padding:0;display:grid;gap:20px;color:#34443d;font-size:14px;line-height:1.45;font-weight:600}
+    .signup-steps li{display:flex;align-items:center;gap:12px}
+    .signup-steps li span:first-child{width:25px;height:25px;flex:none;display:grid;place-items:center;border-radius:50%;background:#1e3e35;color:#fff;font-size:11px;font-weight:700}
+    .signup-proof{border-top:1px solid #e5e5de;padding-top:13px;margin-top:34px;color:#71807a;font-size:10px;line-height:1.45}
     .google-signup{display:flex;align-items:center;justify-content:center;gap:11px;width:100%;min-height:48px;margin:22px 0 0;border:1px solid #d5ddd6;border-radius:8px;background:#fff;color:#273b34;font-size:13px;font-weight:700;transition:background .15s,border-color .15s}
     .google-signup:hover{background:#f9fbf8;border-color:#bfcbbf}
     .google-signup:focus-visible{outline:3px solid #bde57890;outline-offset:2px}
@@ -47,7 +36,7 @@
     .signup-footer{margin:18px 0 0;text-align:center;color:var(--muted);font-size:12px}
     .signup-footer a{color:#426a31;font-weight:700;text-decoration:underline}
     @media(max-width:760px){.auth-layout,.content-grid{grid-template-columns:1fr}.auth-layout{min-height:0}.welcome-card{order:2;border-left:0;border-top:1px solid #e2e7e2}.profile-card{padding:18px}.dashboard-head{align-items:center}.header-actions>a:first-child{display:none}}
-    @media(max-width:480px){.shell{width:calc(100% - 28px)}header{height:68px}main{padding:28px 0 50px}h1{font-size:27px}.auth-card,.welcome-card{padding:30px 22px}.welcome-card h2{font-size:clamp(32px,7vw,42px);letter-spacing:-1.8px}.signup-profile-preview{margin:26px 0 20px;transform:rotate(-.8deg)}.signup-steps{align-items:flex-start;flex-direction:column;gap:9px;margin-top:10px}.profile-grid{grid-template-columns:1fr}.profile-grid .full{grid-column:auto}.dashboard-head{align-items:flex-start}}
+    @media(max-width:480px){.shell{width:calc(100% - 28px)}header{height:68px}main{padding:28px 0 50px}h1{font-size:27px}.auth-card,.welcome-card{padding:30px 22px}.welcome-card h2{font-size:clamp(32px,7vw,42px);letter-spacing:-1.8px}.signup-steps{gap:16px;font-size:13px}.signup-proof{margin-top:28px}.profile-grid{grid-template-columns:1fr}.profile-grid .full{grid-column:auto}.dashboard-head{align-items:flex-start}}
     @media(max-width:760px){.signup-promo-details{margin-top:34px}}
   </style>
 </head>
@@ -78,12 +67,7 @@
           <p class="signup-promo-copy">Build your profile once. Our recruiting team matches you to client projects in data, cloud and enterprise platforms.</p>
         </div>
         <div class="signup-promo-details">
-          <div class="signup-profile-preview" aria-label="Example candidate profile preview">
-            <div class="signup-preview-person"><span class="signup-preview-avatar">YN</span><div class="signup-preview-identity"><strong>Your Name</strong><span>Senior Data Engineer</span></div><span class="signup-preview-available">Available</span></div>
-            <div class="signup-preview-skills"><span>Snowflake</span><span>Salesforce CPQ</span><span>Oracle Cloud</span><span>DevOps</span></div>
-            <div class="signup-preview-status"><span aria-hidden="true">✓</span>Shortlisted for a client project</div>
-          </div>
-          <ol class="signup-steps"><li><span>1</span><span>Create your profile</span></li><li><span>2</span><span>We review and match</span></li><li><span>3</span><span>Shortlisted to clients</span></li></ol>
+          <ol class="signup-steps"><li><span>1</span><span>Create your profile</span></li><li><span>2</span><span>We match you to projects</span></li><li><span>3</span><span>Onboard and start work</span></li></ol>
           <footer class="signup-proof">BenchPro connects tech professionals with project work from clients across India, the US, Europe and the Gulf</footer>
         </div>
       </aside>
