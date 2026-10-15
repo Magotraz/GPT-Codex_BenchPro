@@ -14,16 +14,28 @@
     .auth-layout{grid-template-columns:1fr 1fr;gap:0;min-height:610px;overflow:hidden;background:#fff;border:1px solid #e4ebe4;border-radius:22px;box-shadow:0 16px 50px #1e3e2c10}
     .auth-card,.welcome-card{padding:clamp(34px,5vw,68px);border:0;border-radius:0;box-shadow:none}
     .auth-card{display:flex;flex-direction:column;justify-content:center;background:#fff}
-    .welcome-card{display:flex;flex-direction:column;justify-content:center;position:relative;isolation:isolate;background:#fbfcfa;border-left:1px solid #e2e7e2;color:#18352d;overflow:hidden}
-    .welcome-card:before,.welcome-card:after{position:absolute;z-index:-1;border:1px solid #18352d0b;border-radius:50%;content:""}
-    .welcome-card:before{width:390px;height:390px;right:-155px;top:-190px}
-    .welcome-card:after{width:300px;height:300px;right:-120px;bottom:-190px}
-    .welcome-card .eyebrow{color:#6f8b45;font-size:11px;letter-spacing:1.25px}
-    .welcome-card h2{font:700 clamp(34px,3.6vw,48px)/1.06 Manrope,sans-serif;letter-spacing:-2.4px;margin:8px 0;max-width:560px}
-    .welcome-card p{color:#65746d;line-height:1.6;font-size:16px;max-width:460px;margin:8px 0 28px}
-    .welcome-points{list-style:none;padding:0;margin:0;display:grid;gap:13px;color:#66756d;font-size:16px;line-height:1.45;font-weight:400}
-    .welcome-points li{display:grid;grid-template-columns:30px 1fr;align-items:start;gap:12px}
-    .welcome-points li:before{content:'✓';display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#e7f2d8;color:#315b2e;font-size:14px;font-weight:800}
+    .welcome-card{display:flex;flex-direction:column;justify-content:center;position:relative;isolation:isolate;background:#f6f5ef;border-left:1px solid #e2e7e2;color:#18352d;overflow:hidden}
+    .welcome-card:before,.welcome-card:after{display:none}
+    .welcome-card .eyebrow{color:#6f8b45;font-size:10px;letter-spacing:1.2px}
+    .welcome-card h2{font:800 clamp(30px,3.1vw,40px)/1.08 Manrope,sans-serif;letter-spacing:-1.8px;margin:12px 0 14px;max-width:500px}
+    .welcome-card .signup-promo-copy{color:#65746d;line-height:1.55;font-size:13px;max-width:440px;margin:0}
+    .signup-profile-preview{max-width:390px;margin:24px 0 20px;padding:16px;background:#fff;border:1px solid #e8e9e2;border-radius:17px;box-shadow:0 14px 32px rgba(29,54,45,.12);transform:rotate(-1.6deg)}
+    .signup-preview-person{display:flex;align-items:center;gap:11px}
+    .signup-preview-avatar{width:36px;height:36px;flex:none;border-radius:50%;display:grid;place-items:center;background:#e7f2d8;color:#315b2e;font-size:12px;font-weight:800}
+    .signup-preview-identity{display:grid;gap:2px;min-width:0}
+    .signup-preview-identity strong{font-size:12px;color:#18352d}
+    .signup-preview-identity span{font-size:10px;color:#71807a}
+    .signup-preview-available{margin-left:auto;border-radius:20px;padding:5px 10px;background:#e8f1dc;color:#426a31;font-size:9px;font-weight:700;white-space:nowrap}
+    .signup-preview-skills{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 10px}
+    .signup-preview-skills span{border-radius:20px;padding:5px 8px;background:#f1f2ed;color:#34443d;font-size:9px;white-space:nowrap}
+    .signup-preview-status{border-top:1px solid #eceee8;padding-top:10px;color:#426a31;font-size:10px;font-weight:600}
+    .signup-preview-status span{margin-right:7px;font-weight:800}
+    .signup-steps{list-style:none;margin:0;padding:0;display:flex;align-items:center;justify-content:space-between;gap:10px;color:#34443d;font-size:10px}
+    .signup-steps li{display:flex;align-items:center;gap:7px;white-space:nowrap}
+    .signup-steps li span:first-child{width:20px;height:20px;flex:none;display:grid;place-items:center;border-radius:50%;background:#1e3e35;color:#fff;font-size:10px;font-weight:700}
+    .welcome-card .signup-privacy{display:flex;align-items:flex-start;gap:10px;margin:18px 0;color:#71807a;font-size:11px;line-height:1.5;max-width:440px}
+    .signup-privacy svg{width:13px;height:13px;flex:none;margin-top:2px;color:#345c4d}
+    .signup-proof{border-top:1px solid #e5e5de;padding-top:13px;color:#87918b;font-size:9px;line-height:1.45}
     .google-signup{display:flex;align-items:center;justify-content:center;gap:11px;width:100%;min-height:48px;margin:22px 0 0;border:1px solid #d5ddd6;border-radius:8px;background:#fff;color:#273b34;font-size:13px;font-weight:700;transition:background .15s,border-color .15s}
     .google-signup:hover{background:#f9fbf8;border-color:#bfcbbf}
     .google-signup:focus-visible{outline:3px solid #bde57890;outline-offset:2px}
@@ -35,7 +47,7 @@
     .signup-footer{margin:18px 0 0;text-align:center;color:var(--muted);font-size:12px}
     .signup-footer a{color:#426a31;font-weight:700;text-decoration:underline}
     @media(max-width:760px){.auth-layout,.content-grid{grid-template-columns:1fr}.auth-layout{min-height:0}.welcome-card{order:2;border-left:0;border-top:1px solid #e2e7e2}.profile-card{padding:18px}.dashboard-head{align-items:center}.header-actions>a:first-child{display:none}}
-    @media(max-width:480px){.shell{width:calc(100% - 28px)}header{height:68px}main{padding:28px 0 50px}h1{font-size:27px}.auth-card,.welcome-card{padding:30px 22px}.welcome-card h2{font-size:clamp(32px,7vw,42px);letter-spacing:-1.8px}.profile-grid{grid-template-columns:1fr}.profile-grid .full{grid-column:auto}.dashboard-head{align-items:flex-start}}
+    @media(max-width:480px){.shell{width:calc(100% - 28px)}header{height:68px}main{padding:28px 0 50px}h1{font-size:27px}.auth-card,.welcome-card{padding:30px 22px}.welcome-card h2{font-size:clamp(32px,7vw,42px);letter-spacing:-1.8px}.signup-profile-preview{margin:22px 0 18px;transform:rotate(-.8deg)}.signup-steps{align-items:flex-start;flex-direction:column;gap:9px}.profile-grid{grid-template-columns:1fr}.profile-grid .full{grid-column:auto}.dashboard-head{align-items:flex-start}}
   </style>
 </head>
 <body>
@@ -58,7 +70,19 @@
         </form>
         <p class="signup-footer" id="signupFooter">Already have a BenchPro account? <a href="login.html">Sign in</a></p>
       </div>
-      <aside class="panel welcome-card"><div class="eyebrow">Your next project starts here</div><h2>A profile that stays yours.</h2><p>Share your experience once. BenchPro’s recruiting team can review your profile and reach out when your skills fit a client project.</p><ul class="welcome-points"><li>Keep your skills and availability current</li><li>Upload a resume to support your experience</li><li>Your profile is shared with clients only through BenchPro’s shortlist process</li></ul></aside>
+      <aside class="panel welcome-card">
+        <div class="eyebrow">Your next project starts here</div>
+        <h2>Contract projects that fit your stack.</h2>
+        <p class="signup-promo-copy">Build your profile once. Our recruiting team matches you to client projects in data, cloud and enterprise platforms.</p>
+        <div class="signup-profile-preview" aria-label="Example candidate profile preview">
+          <div class="signup-preview-person"><span class="signup-preview-avatar">YN</span><div class="signup-preview-identity"><strong>Your Name</strong><span>Senior Data Engineer</span></div><span class="signup-preview-available">Available</span></div>
+          <div class="signup-preview-skills"><span>Snowflake</span><span>Salesforce CPQ</span><span>Oracle Cloud</span><span>DevOps</span></div>
+          <div class="signup-preview-status"><span aria-hidden="true">✓</span>Shortlisted for a client project</div>
+        </div>
+        <ol class="signup-steps"><li><span>1</span><span>Create your profile</span></li><li><span>2</span><span>We review and match</span></li><li><span>3</span><span>Shortlisted to clients</span></li></ol>
+        <p class="signup-privacy"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 7V4.8a2.5 2.5 0 0 1 5 0V7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span>Clients never see your profile directly. It’s shared only through BenchPro’s shortlist process.</span></p>
+        <footer class="signup-proof">Backed by HIREF Technologies · 7+ years in IT staffing · 50+ global clients across India, US, EU and the Gulf</footer>
+      </aside>
     </section>
     <section id="dashboardView" hidden>
       <div class="dashboard-head"><div><div class="eyebrow">Candidate dashboard</div><h1 id="dashboardTitle">Welcome</h1><p class="subhead">Keep your experience and availability up to date for BenchPro project opportunities.</p><div class="account-email" id="accountEmail"></div></div></div>
