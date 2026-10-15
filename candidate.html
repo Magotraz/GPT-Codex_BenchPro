@@ -17,13 +17,12 @@
     .welcome-card{display:flex;flex-direction:column;justify-content:space-between;position:relative;isolation:isolate;background:#f6f5ef;border-left:1px solid #e2e7e2;color:#18352d;overflow:hidden}
     .welcome-card:before,.welcome-card:after{display:none}
     .welcome-card .eyebrow{color:#6f8b45;font-size:10px;letter-spacing:1.2px}
-    .welcome-card h2{font:800 clamp(30px,3.1vw,40px)/1.08 Manrope,sans-serif;letter-spacing:-1.8px;margin:7px 0 14px;max-width:500px}
-    .welcome-card .signup-promo-copy{color:#65746d;line-height:1.55;font-size:13px;max-width:440px;margin:0}
+    .welcome-card h2{font:800 clamp(36px,3.7vw,46px)/1.08 Manrope,sans-serif;letter-spacing:-1.8px;margin:0;max-width:500px}
     .signup-promo-heading{max-width:500px}
     .signup-promo-details{width:100%;flex:1;display:flex;flex-direction:column;justify-content:center;margin-top:36px}
-    .signup-steps{list-style:none;margin:0;padding:0;display:grid;gap:20px;color:#34443d;font-size:14px;line-height:1.45;font-weight:600}
-    .signup-steps li{display:flex;align-items:center;gap:12px}
-    .signup-steps li span:first-child{width:25px;height:25px;flex:none;display:grid;place-items:center;border-radius:50%;background:#1e3e35;color:#fff;font-size:11px;font-weight:700}
+    .signup-steps{list-style:none;margin:0;padding:0;display:grid;gap:22px;color:#34443d;font-size:56px;line-height:1.1;font-weight:600}
+    .signup-steps li{display:flex;align-items:flex-start;gap:14px}
+    .signup-steps li span:first-child{width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:50%;background:#1e3e35;color:#fff;font-size:15px;font-weight:700;margin-top:7px}
     .signup-proof{border-top:1px solid #e5e5de;padding-top:13px;margin-top:34px;color:#71807a;font-size:10px;line-height:1.45}
     .google-signup{display:flex;align-items:center;justify-content:center;gap:11px;width:100%;min-height:48px;margin:22px 0 0;border:1px solid #d5ddd6;border-radius:8px;background:#fff;color:#273b34;font-size:13px;font-weight:700;transition:background .15s,border-color .15s}
     .google-signup:hover{background:#f9fbf8;border-color:#bfcbbf}
@@ -36,7 +35,7 @@
     .signup-footer{margin:18px 0 0;text-align:center;color:var(--muted);font-size:12px}
     .signup-footer a{color:#426a31;font-weight:700;text-decoration:underline}
     @media(max-width:760px){.auth-layout,.content-grid{grid-template-columns:1fr}.auth-layout{min-height:0}.welcome-card{order:2;border-left:0;border-top:1px solid #e2e7e2}.profile-card{padding:18px}.dashboard-head{align-items:center}.header-actions>a:first-child{display:none}}
-    @media(max-width:480px){.shell{width:calc(100% - 28px)}header{height:68px}main{padding:28px 0 50px}h1{font-size:27px}.auth-card,.welcome-card{padding:30px 22px}.welcome-card h2{font-size:clamp(32px,7vw,42px);letter-spacing:-1.8px}.signup-steps{gap:16px;font-size:13px}.signup-proof{margin-top:28px}.profile-grid{grid-template-columns:1fr}.profile-grid .full{grid-column:auto}.dashboard-head{align-items:flex-start}}
+    @media(max-width:480px){.shell{width:calc(100% - 28px)}header{height:68px}main{padding:28px 0 50px}h1{font-size:27px}.auth-card,.welcome-card{padding:30px 22px}.welcome-card h2{font-size:clamp(32px,7vw,42px);letter-spacing:-1.8px}.signup-steps{gap:18px;font-size:52px}.signup-proof{margin-top:28px}.profile-grid{grid-template-columns:1fr}.profile-grid .full{grid-column:auto}.dashboard-head{align-items:flex-start}}
     @media(max-width:760px){.signup-promo-details{margin-top:34px}}
   </style>
 </head>
@@ -62,9 +61,7 @@
       </div>
       <aside class="panel welcome-card">
         <div class="signup-promo-heading">
-          <div class="eyebrow">Project work that fits your stack.</div>
-          <h2>Find Projects that fit your stack</h2>
-          <p class="signup-promo-copy">Build your profile once. Our recruiting team matches you to client projects in data, cloud and enterprise platforms.</p>
+          <h2>Project work<br>that fits your stack.</h2>
         </div>
         <div class="signup-promo-details">
           <ol class="signup-steps"><li><span>1</span><span>Create your profile</span></li><li><span>2</span><span>We match you to projects</span></li><li><span>3</span><span>Onboard and start work</span></li></ol>
