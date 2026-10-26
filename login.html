@@ -108,16 +108,23 @@
     let session=null;
     function getSession(){try{return JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null')}catch{return null}}
     function saveSession(value){sessionStorage.setItem(SESSION_KEY,JSON.stringify(value))}
-    function clearSession(){sessionStorage.removeItem(SESSION_KEY)}
+    function clearSession(){sessionStorage.removeItem(SESSION_KEY);sessionStorage.removeItem('benchpro_staff_session')}
     function message(node,text,error=false){node.textContent=text;node.hidden=!text;node.classList.toggle('error',error)}
     async function auth(path,payload,token){return fetch(SUPABASE_URL+'/auth/v1/'+path,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+(token||KEY),'Content-Type':'application/json'},body:JSON.stringify(payload)})}
     async function api(path,token){return fetch(SUPABASE_URL+'/rest/v1/'+path,{headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'}})}
     function gotoCandidate(){location.replace('candidate.html')}
     function gotoClient(clientId){location.replace('client.html?client_id='+encodeURIComponent(clientId))}
+    function gotoAdmin(){sessionStorage.setItem('benchpro_staff_session',JSON.stringify(session));location.replace('admin.html')}
     function showLogin(text='',error=false){loginLayout.hidden=false;destinationView.hidden=true;recoveryView.hidden=true;message($('feedback'),text,error)}
     function showDestinations(options){loginLayout.hidden=true;destinationView.hidden=false;recoveryView.hidden=true;const list=$('destinations');list.replaceChildren();for(const option of options){const button=document.createElement('button');button.className='role-choice';button.type='button';button.innerHTML='<span><strong></strong><span></span></span><b>→</b>';button.querySelector('strong').textContent=option.title;button.querySelector('span span').textContent=option.detail;button.addEventListener('click',option.go);list.append(button)}}
     async function routeAccount(current){
       session=current;saveSession(session);const token=session.access_token,user=session.user;
+      sessionStorage.removeItem('benchpro_staff_session');
+      const staffResponse=await fetch(SUPABASE_URL+'/rest/v1/rpc/is_benchpro_staff_account',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},body:'{}'});
+      if(!staffResponse.ok)throw new Error('Could not verify your BenchPro access. Please try again.');
+      const isStaff=await staffResponse.json();
+      if(typeof isStaff!=='boolean')throw new Error('Could not verify your BenchPro access. Please try again.');
+      if(isStaff){gotoAdmin();return}
       const membershipParams=new URLSearchParams({select:'id,client_id,role,status,user_id',user_id:'eq.'+user.id,status:'eq.active',order:'created_at.asc'});
       const [candidateResponse,membershipResponse]=await Promise.all([api('candidate_accounts?select=id&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1',token),api('client_memberships?'+membershipParams.toString(),token)]);
       if(!candidateResponse.ok||!membershipResponse.ok)throw new Error('Could not check your BenchPro workspaces. Please try again.');

@@ -129,7 +129,7 @@
     const normalizeCompanyName=value=>String(value||'').trim().replace(/\s+/g,' ').toLowerCase();
     const getSession=()=>{try{return JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null')}catch{return null}};
     const saveSession=session=>sessionStorage.setItem(SESSION_KEY,JSON.stringify(session));
-    const clearSession=()=>sessionStorage.removeItem(SESSION_KEY);
+    const clearSession=()=>{sessionStorage.removeItem(SESSION_KEY);sessionStorage.removeItem('benchpro_candidate_session')};
     async function authPost(path,payload,token){return fetch(SUPABASE_URL+'/auth/v1/'+path,{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(token||SUPABASE_PUBLISHABLE_KEY),'Content-Type':'application/json'},body:JSON.stringify(payload)})}
     async function accessToken(){let session=getSession();if(!session?.refresh_token)throw new Error('Please sign in again.');if(session.expires_at>Date.now()/1000+60)return session.access_token;const response=await authPost('token?grant_type=refresh_token',{refresh_token:session.refresh_token});if(!response.ok){clearSession();throw new Error('Your session expired. Please sign in again.')}const fresh=await response.json();fresh.expires_at=fresh.expires_at||Math.floor(Date.now()/1000)+(fresh.expires_in||3600);saveSession(fresh);return fresh.access_token}
     async function api(path,options={}){const token=await accessToken();const response=await fetch(SUPABASE_URL+'/rest/v1/'+path,{...options,headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+token,'Content-Type':'application/json',...(options.headers||{})}});if(response.status===401){clearSession();showLogin('Your session expired. Please sign in again.')}return response}
