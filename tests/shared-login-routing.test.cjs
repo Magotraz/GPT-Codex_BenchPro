@@ -12,11 +12,12 @@ assert.ok(start >= 0 && end > start, 'Login routing source is present');
 const routingSource = html.slice(start, end);
 const account = {access_token:'test-token',refresh_token:'test-refresh',user:{id:'test-user'}};
 
-function harness({staff=false,candidates=[],memberships=[],clients=[],staffOk=true}={}) {
+function harness({staff=false,candidates=[],memberships=[],clients=[],staffOk=true,pendingProject=null}={}) {
   const storage = new Map([['benchpro_staff_session','stale-session']]);
   const calls = [], redirects = [];
   const context = vm.createContext({
     URLSearchParams,
+    ProjectIntent:{read:()=>pendingProject,target:id=>'project.html?id='+id+'&apply=1'},
     document:{getElementById:()=>({hidden:false,classList:{toggle(){}}})},
     sessionStorage:{getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},
     location:{replace:url=>redirects.push(url)},
@@ -85,4 +86,11 @@ test('clearing shared login removes both session keys',async()=>{
   await h.route();
   h.context.clearSession();
   assert.equal(h.storage.size,0);
+});
+
+test('a pending project application returns to its review after verified login',async()=>{
+  const h=harness({pendingProject:'project-1',memberships:[{client_id:'client-1',role:'superuser'}]});await h.route();assert.deepEqual(h.redirects,['project.html?id=project-1&apply=1']);assert.equal(h.storage.has('benchpro_staff_session'),false);
+});
+test('pending applications cannot bypass failed access verification',async()=>{
+  const h=harness({pendingProject:'project-1',staffOk:false});await assert.rejects(h.route(),/Could not verify/);assert.deepEqual(h.redirects,[]);
 });

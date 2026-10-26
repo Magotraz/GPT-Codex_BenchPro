@@ -1,8 +1,8 @@
 /* Reuse this font system on future dashboard roots with the dashboard-shell class. */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --dashboard-font-family: "Roboto", Arial, sans-serif;
+  --dashboard-font-family: "Inter", Arial, sans-serif;
 }
 
 .dashboard-shell,

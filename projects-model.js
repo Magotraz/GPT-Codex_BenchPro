@@ -1,0 +1,13 @@
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.ProjectsModel=api})(typeof globalThis!=='undefined'?globalThis:this,function(){
+  const categories=['Data & AI','Enterprise platforms','Cloud & platform','Engineering','Other'];
+  const stages={submitted:'Application received',reviewing:'Under review',shortlisted:'Shortlisted',client_review:'Client review',offer:'Offer',placed:'Onboarded',rejected:'Not selected',closed:'Closed',withdrawn:'Withdrawn'};
+  const availability={available:'Available now',within_2_weeks:'Within 2 weeks',within_4_weeks:'Within 4 weeks',engaged:'Currently engaged',paused:'Not available yet'};
+  const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const lines=value=>String(value||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  const isOpen=(p,now=Date.now())=>p?.status==='published'&&!p.is_demo&&(!p.expires_at||Date.parse(p.expires_at)>now);
+  function missingProfile(p){const missing=[];if(!p?.full_name?.trim()||p.full_name.trim().length<2)missing.push('full name');if(!p?.primary_role?.trim()||p.primary_role.trim().length<2)missing.push('primary role');if(!p?.country_or_timezone?.trim())missing.push('country');if(!p?.skills?.length)missing.push('skills');if(!p?.resume_file_path)missing.push('resume');return missing}
+  function matches(p,{q='',category='',mode=''}={}){return (!category||p.category===category)&&(!mode||p.work_mode===mode)&&(!q.trim()||[p.title,p.summary,p.location,...(p.skills||[])].join(' ').toLowerCase().includes(q.trim().toLowerCase()))}
+  const canWithdraw=status=>['submitted','reviewing','shortlisted','client_review','offer'].includes(status);
+  function card(p){return `<article class="project-card"><div class="project-card-top"><span class="project-category">${esc(p.category)}</span><span class="project-mode">${esc(p.work_mode)}</span></div><h3><a href="project.html?id=${encodeURIComponent(p.id)}">${esc(p.title)}</a></h3><p class="project-company">${esc(p.client_display_name)}</p><p class="project-summary">${esc(p.summary)}</p><div class="project-tags">${(p.skills||[]).slice(0,4).map(s=>`<span>${esc(s)}</span>`).join('')}</div><dl class="project-meta"><div><dt>Location</dt><dd>${esc(p.location)}</dd></div><div><dt>Duration</dt><dd>${esc(p.duration)}</dd></div><div><dt>Experience</dt><dd>${esc(p.experience)}</dd></div></dl><a class="project-card-link" href="project.html?id=${encodeURIComponent(p.id)}">View project <span aria-hidden="true">↗</span></a></article>`}
+  return {categories,stages,availability,esc,lines,isOpen,missingProfile,matches,canWithdraw,card};
+});

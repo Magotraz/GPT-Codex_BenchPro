@@ -34,12 +34,14 @@
     .date-field{position:relative;min-width:0}.date-field:before{content:attr(data-placeholder);position:absolute;z-index:1;left:14px;top:17px;color:#89958e;font-size:15px;line-height:1;pointer-events:none}.date-field:not(.has-value):not(:focus-within) input{color:transparent}.date-field:focus-within:before,.date-field.has-value:before{display:none}
   </style>
   <link rel="stylesheet" href="homepage.css" />
+  <link rel="stylesheet" href="homepage-neutral.css">
+  <link rel="stylesheet" href="projects.css">
 </head>
 <body>
   <header class="home-header">
     <div class="shell home-header-inner">
       <a class="brand" href="#top" aria-label="BenchPro home"><img class="brand-logo" src="images/benchpro-logo.png" alt="">BenchPro</a>
-      <nav class="nav" id="nav" aria-label="Main navigation"><a href="#expertise">Expertise</a><a href="#how">How we work</a><a href="#advantage">Why BenchPro</a><a href="#professionals">For professionals</a></nav>
+      <nav class="nav" id="nav" aria-label="Main navigation"><a href="#expertise">Expertise</a><a href="#how">How we work</a><a href="#advantage">Why BenchPro</a><a href="projects.html">Find projects</a></nav>
       <div class="actions"><a class="home-login" href="login.html">Log in</a><button class="btn home-header-cta" type="button" data-modal="employer">Hire talent <span aria-hidden="true">↗</span></button><button class="menu" id="menu" type="button" aria-label="Open menu" aria-controls="nav" aria-expanded="false">☰</button></div>
     </div>
   </header>
@@ -74,9 +76,10 @@
     <section class="home-section shell home-models" id="advantage"><div class="home-section-head"><div><div class="home-label">BUILT TO FIT THE BRIEF</div><h2>Flexible talent support.<br>A consistent partner.</h2></div><p>Bring in focused expertise for a defined need or add capacity to a longer project. We shape the search around the work, not a fixed catalogue.</p></div><div class="home-model-grid"><article><span>01</span><h3>Short-term expertise</h3><p>Bring in specialist support for a focused deliverable or immediate gap.</p></article><article><span>02</span><h3>Longer project capacity</h3><p>Find professionals who can work alongside your team over an extended engagement.</p></article><article><span>03</span><h3>Engagement coordination</h3><p>Keep one point of contact for the shortlist, contracting and payroll arrangements.</p></article></div></section>
     <section class="home-questions shell"><div><div class="home-label">THE PRACTICAL DETAILS</div><h2>Clear from the<br>first conversation.</h2><p>We confirm the specifics of each engagement with you before making introductions or commitments.</p></div><div class="home-questions-list"><details><summary>What happens after I share a role?</summary><p>Our team reviews the brief, follows up on any missing detail and discusses the search and next steps with you.</p></details><details><summary>How do you assess a match?</summary><p>We consider the required skills and experience alongside project scope, timing and working arrangements. You review and select from the proposed shortlist.</p></details><details><summary>Can I request a specific location or duration?</summary><p>Yes. Add these requirements to the brief. We will confirm what is feasible for the role and the locations involved.</p></details><details><summary>Who manages the engagement?</summary><p>Your team directs the project work. BenchPro coordinates the talent engagement, with contracting and payroll support agreed for each assignment.</p></details></div></section>
     <section class="home-final"><div class="shell home-final-inner"><div><div class="home-label">LET'S BUILD THE RIGHT TEAM</div><h2>Ready to move your<br>project forward?</h2><p>Share the role. We will review your brief and talk through the right next step.</p></div><button class="btn home-primary" type="button" data-modal="employer">Tell us about your role <span aria-hidden="true">↗</span></button></div></section>
+    <section class="project-home shell" id="projects" aria-labelledby="projectsHeading"><div class="project-home-heading"><div><span class="project-kicker">FOR TECHNOLOGY PROFESSIONALS</span><h2 id="projectsHeading">Your skills. A new project. What’s next?</h2><p>Discover open opportunities and make your next move with BenchPro.</p></div><a href="projects.html">Explore all projects →</a></div><div id="homeProjects" class="project-grid" aria-busy="true" aria-live="polite"><p>Loading project opportunities…</p></div></section>
     <section class="home-professionals shell" id="professionals"><div><span>FOR TECHNOLOGY PROFESSIONALS</span><h2>Find project work that fits your skills.</h2><p>Create your profile to be considered for relevant client projects.</p></div><a href="candidate.html">Create your profile <span aria-hidden="true">→</span></a></section>
   </main>
-  <footer class="home-footer"><div class="shell home-footer-inner"><div><a class="brand" href="#top" aria-label="BenchPro home"><img class="brand-logo" src="images/benchpro-logo.png" alt="">BenchPro</a><p>Project staffing, built around delivery.</p><small>© 2026 BenchPro.</small></div><div class="home-footer-links"><div><strong>Explore</strong><a href="#expertise">Expertise</a><a href="#how">How we work</a><a href="#advantage">Why BenchPro</a></div><div><strong>Get started</strong><button type="button" data-modal="employer">Hire talent</button><a href="candidate.html">For professionals</a><a href="login.html">Log in</a></div></div></div></footer>
+  <footer class="home-footer"><div class="shell home-footer-inner"><div><a class="brand" href="#top" aria-label="BenchPro home"><img class="brand-logo" src="images/benchpro-logo.png" alt="">BenchPro</a><p>Project staffing, built around delivery.</p><small>© 2026 BenchPro.</small></div><div class="home-footer-links"><div><strong>Explore</strong><a href="#expertise">Expertise</a><a href="#how">How we work</a><a href="#advantage">Why BenchPro</a><a href="projects.html">Find projects</a></div><div><strong>Get started</strong><button type="button" data-modal="employer">Hire talent</button><a href="candidate.html">For professionals</a><a href="login.html">Log in</a></div></div></div></footer>
   <div class="modal-wrap" id="modalWrap" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><button class="modal-close" aria-label="Close">×</button><div id="modalContent"></div></div></div>
   <script>
     const SUPABASE_URL = 'https://ttmkcmeqiawrzbvymhal.supabase.co';
@@ -267,6 +270,7 @@
     menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'Close menu':'Open menu')});
     nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.setAttribute('aria-label','Open menu')}));
   </script>
+<script src="projects-model.js"></script><script src="projects-api.js"></script><script src="projects-home.js"></script>
 </body>
 </html>
 

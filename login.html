@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f9f6">
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
   <title>Log in | BenchPro</title>
   <link rel="icon" type="image/png" href="images/benchpro-logo.png">
   <link rel="stylesheet" href="brand.css">
@@ -102,7 +102,10 @@
       <div id="recoveryFeedback" class="feedback" hidden aria-live="polite"></div>
     </section>
   </main>
+  <script src="project-intent.js"></script>
   <script>
+    ProjectIntent.capture(location.search,sessionStorage,Date.now(),localStorage);
+    const applicationId=ProjectIntent.read(sessionStorage);if(applicationId)document.querySelector('.signup-note a').href='candidate.html?apply_to='+applicationId;
     const SUPABASE_URL='https://ttmkcmeqiawrzbvymhal.supabase.co',KEY='sb_publishable_kYY2o5gsLpUww-bgH0az4A_nQhdMiaN',SESSION_KEY='benchpro_candidate_session';
     const $=id=>document.getElementById(id),loginLayout=$('loginLayout'),loginView=$('loginView'),destinationView=$('destinationView'),recoveryView=$('recoveryView');
     let session=null;
@@ -124,6 +127,8 @@
       if(!staffResponse.ok)throw new Error('Could not verify your BenchPro access. Please try again.');
       const isStaff=await staffResponse.json();
       if(typeof isStaff!=='boolean')throw new Error('Could not verify your BenchPro access. Please try again.');
+      const application=typeof ProjectIntent!=='undefined'?ProjectIntent.read(sessionStorage):null;
+      if(application){if(isStaff)sessionStorage.setItem('benchpro_staff_session',JSON.stringify(session));location.replace(ProjectIntent.target(application));return}
       if(isStaff){gotoAdmin();return}
       const membershipParams=new URLSearchParams({select:'id,client_id,role,status,user_id',user_id:'eq.'+user.id,status:'eq.active',order:'created_at.asc'});
       const [candidateResponse,membershipResponse]=await Promise.all([api('candidate_accounts?select=id&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1',token),api('client_memberships?'+membershipParams.toString(),token)]);
