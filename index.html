@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#f7f8f5" />
+  <meta name="theme-color" content="#ffffff" />
   <meta name="description" content="BenchPro helps companies source and onboard technology professionals for project work, with a managed path from brief to shortlist, contracting and payroll." />
-  <meta property="og:title" content="BenchPro — Project staffing built around delivery" />
+  <meta property="og:title" content="BenchPro — Project staffing, made simple" />
   <meta property="og:description" content="Technology talent matched to your project brief, with one partner from shortlist through onboarding." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://www.benchpro.in/images/benchpro-logo.png" />
-  <title>BenchPro — Project staffing built around delivery</title>
+  <title>BenchPro — Project staffing, made simple</title>
   <link rel="icon" type="image/png" href="images/benchpro-logo.png">
   <link rel="stylesheet" href="brand.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,8 +33,8 @@
     .jd-upload{grid-column:1/-1;margin:2px 0 10px}.jd-upload-label{font-size:12px;font-weight:700;color:var(--ink);margin:0 0 7px}.jd-dropzone{border:1px dashed #b9c8b4;border-radius:10px;background:#fbfcf9;padding:15px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px;cursor:pointer}.jd-dropzone:hover,.jd-dropzone:focus,.jd-dropzone.dragover{border-color:#789c58;background:#f4f8ee;outline:2px solid #89ac6240}.jd-drop-copy strong{display:block;color:var(--ink);font-size:13px;margin-bottom:3px}.jd-drop-actions{display:flex;align-items:center;gap:8px;flex:none}.jd-file-name{font-size:11px;color:var(--deep);font-weight:700;overflow-wrap:anywhere}.jd-upload-note{font-size:10px;color:var(--muted);margin:6px 0 0}.jd-file-button,.jd-remove-button{border:1px solid var(--line);border-radius:7px;background:white;padding:8px 10px;color:var(--deep);font-size:11px;font-weight:700;cursor:pointer}.jd-remove-button{color:#8a493b}.@media(max-width:480px){.jd-upload{grid-column:auto}.jd-dropzone{align-items:flex-start;flex-direction:column}.jd-drop-actions{width:100%;justify-content:space-between}}
     .date-field{position:relative;min-width:0}.date-field:before{content:attr(data-placeholder);position:absolute;z-index:1;left:14px;top:17px;color:#89958e;font-size:15px;line-height:1;pointer-events:none}.date-field:not(.has-value):not(:focus-within) input{color:transparent}.date-field:focus-within:before,.date-field.has-value:before{display:none}
   </style>
-  <link rel="stylesheet" href="homepage.css" />
-  <link rel="stylesheet" href="homepage-neutral.css">
+  <link rel="stylesheet" href="homepage.css?v=20261027-hero" />
+  <link rel="stylesheet" href="homepage-neutral.css?v=20261027-hero">
   <link rel="stylesheet" href="projects.css">
 </head>
 <body>
@@ -46,22 +46,24 @@
     </div>
   </header>
   <main id="top">
-    <section class="home-hero shell">
+    <section class="home-hero shell" aria-labelledby="home-hero-title">
       <div class="home-hero-copy">
-        <div class="home-eyebrow"><span aria-hidden="true"></span> Project staffing, built around delivery</div>
-        <h1>The right tech talent for <em>the work ahead.</em></h1>
-        <p>Tell us what your project needs. BenchPro helps source, screen and shortlist technology professionals, then coordinates the engagement around your team.</p>
-        <div class="home-hero-actions"><button class="btn home-primary" type="button" data-modal="employer">Tell us about your role <span aria-hidden="true">↗</span></button><a class="home-secondary" href="#how">See how it works <span aria-hidden="true">→</span></a></div>
-        <div class="home-hero-note"><span class="home-note-mark" aria-hidden="true">✓</span><span>One partner from brief to onboarding</span></div>
+        <div class="home-eyebrow"><span aria-hidden="true"></span> Global project staffing</div>
+        <h1 id="home-hero-title">Project staffing,<br>made simple.</h1>
+        <ul class="home-hero-benefits">
+          <li><span aria-hidden="true">✓</span>Technology professionals matched to your brief.</li>
+          <li><span aria-hidden="true">✓</span>Flexible support for short- and long-term projects.</li>
+          <li><span aria-hidden="true">✓</span>Support from shortlist through onboarding and payroll.</li>
+        </ul>
+        <div class="home-hero-actions"><button class="btn home-primary" type="button" data-modal="employer">Tell us about your project <span aria-hidden="true">↗</span></button><a class="home-secondary" href="#expertise">Explore our expertise <span aria-hidden="true">→</span></a></div>
       </div>
-      <div class="home-hero-art" aria-label="Illustration of BenchPro’s staffing process">
-        <div class="home-art-top"><span>BENCHPRO / THE PROCESS</span><span class="home-art-spark" aria-hidden="true">✳</span></div>
-        <div class="home-art-heading">Good projects need<br><em>the right people.</em></div>
-        <div class="home-art-flow" aria-hidden="true"><div><span>01</span><b>Your brief</b><small>Skills, scope and timing</small></div><div><span>02</span><b>Our shortlist</b><small>Relevant professionals</small></div><div><span>03</span><b>Project start</b><small>Engagement support</small></div></div>
-        <div class="home-art-bottom"><span>FROM NEED TO NEXT STEP</span><span aria-hidden="true">↗</span></div>
+      <div class="home-hero-visual">
+        <img class="home-hero-photo" src="images/project-professional.webp" width="700" height="900" fetchpriority="high" alt="A professional working at a laptop in a collaborative office">
+        <div class="home-hero-card home-hero-card-match"><span class="home-hero-card-icon" aria-hidden="true">✳</span><div><strong>Matched to your brief</strong><small>Skills · experience · availability</small></div></div>
+        <div class="home-hero-card home-hero-card-managed"><span class="home-hero-card-icon" aria-hidden="true">✓</span><div><strong>Managed by our team</strong><small>Contracting · onboarding · support</small></div></div>
       </div>
     </section>
-    <section class="home-promise"><div class="shell home-promise-inner"><p>One clear process.<br><strong>Built around your project.</strong></p><div><span>01</span> Specialist sourcing</div><div><span>02</span> A considered shortlist</div><div><span>03</span> Managed engagement</div></div></section>
+    <div class="home-specialties"><div class="shell home-specialties-inner"><p>Expertise for your next project</p><ul aria-label="Technology specialities"><li>Salesforce</li><li>Data &amp; AI</li><li>Cloud</li><li>Engineering</li></ul></div></div>
     <section class="home-section shell" id="expertise">
       <div class="home-section-head"><div><div class="home-label">WHERE WE CAN HELP</div><h2>Expertise for the work<br>that needs doing.</h2></div><p>Every brief is different. These are examples of the technology areas our team can source for—not a live list of available candidates.</p></div>
       <div class="home-expertise-grid">
