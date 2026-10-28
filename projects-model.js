@@ -1,6 +1,6 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.ProjectsModel=api})(typeof globalThis!=='undefined'?globalThis:this,function(){
   const categories=['Data & AI','Enterprise platforms','Cloud & platform','Engineering','Other'];
-  const stages={submitted:'Application received',reviewing:'Under review',shortlisted:'Shortlisted',client_review:'Client review',offer:'Offer',placed:'Onboarded',rejected:'Not selected',closed:'Closed',withdrawn:'Withdrawn'};
+  const stages={submitted:'Application received',reviewing:'Under review',shortlisted:'Shortlisted',client_review:'Client review',offer:'Offer',placed:'Placement confirmed',rejected:'Not selected',closed:'Closed',withdrawn:'Withdrawn'};
   const availability={available:'Available now',within_2_weeks:'Within 2 weeks',within_4_weeks:'Within 4 weeks',engaged:'Currently engaged',paused:'Not available yet'};
   const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const lines=value=>String(value||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean);

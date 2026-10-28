@@ -1,0 +1,37 @@
+// Run with Playwright available on NODE_PATH. Uses an isolated local HTTP fixture.
+const {chromium}=require('playwright'),assert=require('node:assert/strict'),path=require('node:path');
+const server=require('./candidate-preview-server.cjs');
+(async()=>{
+ await new Promise(r=>server.listen(4181,'127.0.0.1',r));
+ const browser=await chromium.launch({headless:true,channel:'chrome'}),page=await browser.newPage({viewport:{width:1440,height:1100}}),errors=[];
+ page.on('pageerror',e=>{errors.push(e.message);console.error('Browser:',e.message)});
+ await page.goto('http://127.0.0.1:4181/candidate.html');
+ await page.waitForFunction(()=>document.querySelector('#cwContent').getAttribute('aria-busy')==='false');
+ assert.equal(await page.locator('#dashboardTitle').innerText(),'Welcome back, Alex');
+ await page.screenshot({path:path.resolve(__dirname,'../../candidate-workspace-preview.png'),fullPage:true});
+ await page.locator('.cw-nav [data-view="explore"]').click();
+ await page.locator('#cwSearch').fill('snowflake');assert.equal(await page.locator('#cwProjectResults .cw-project').count(),1);
+ await page.locator('#cwProjectResults [data-save]').click();
+ await page.locator('.cw-nav [data-view="saved"]').click();assert.equal(await page.locator('#cwSaved .cw-project').count(),2);
+ await page.reload();await page.waitForFunction(()=>document.querySelector('#cwContent').getAttribute('aria-busy')==='false');assert.equal(await page.locator('#cwSaved .cw-project').count(),2);
+ await page.locator('#cwSaved [data-save]').first().click();await page.waitForFunction(()=>document.querySelectorAll('#cwSaved .cw-project').length===1);assert.equal(await page.locator('#cwSaved .cw-project').count(),1);
+ await page.locator('.cw-nav [data-view="applications"]').click();
+ await page.locator('[data-withdraw]').first().click();assert.equal(await page.locator('#cwWithdrawDialog').isVisible(),true);
+ await page.locator('#cwCancelWithdraw').click();assert.equal(await page.locator('#cwApplications [data-withdraw]').count(),2);
+ await page.locator('[data-withdraw]').first().click();await page.locator('#cwConfirmWithdraw').click();await page.waitForFunction(()=>!document.querySelector('#cwWithdrawDialog').open);assert.equal(await page.locator('#cwApplications [data-withdraw]').count(),1);
+ await page.locator('[data-app-filter="past"]').click();assert.equal(await page.locator('#cwApplications .cw-application').count(),1);
+ await page.locator('.cw-nav [data-view="profile"]').click();await page.locator('[name="primary_role"]').fill('Lead Data Engineer');await page.locator('#saveProfileButton').click();await page.waitForFunction(()=>document.querySelector('#saveFeedback').textContent==='Profile saved.');
+ assert.equal(await page.locator('#dashboardTitle').innerText(),'Make your experience count');
+ await page.locator('.cw-nav [data-view="overview"]').click();
+ await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.resolve(__dirname,'../../candidate-workspace-mobile.png'),fullPage:true});
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+ await page.locator('.cw-nav [data-view="profile"]').click();assert.equal(await page.locator('#profileForm').isVisible(),true);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+ const fresh=await browser.newPage({viewport:{width:1440,height:1000}});fresh.on('pageerror',e=>errors.push(e.message));
+ await fresh.goto('http://127.0.0.1:4181/candidate.html?fixture=new');await fresh.waitForFunction(()=>document.querySelector('#cwContent').getAttribute('aria-busy')==='false');
+ assert.ok((await fresh.locator('#cwNext').innerText()).includes('4 profile essentials remain'));
+ await fresh.locator('.cw-nav [data-view="profile"]').click();await fresh.locator('[name="primary_role"]').fill('Engineer');await fresh.locator('[name="country_or_timezone"]').selectOption('India');await fresh.locator('[name="skills"]').fill('SQL');await fresh.locator('#saveProfileButton').click();await fresh.waitForFunction(()=>document.querySelector('#saveFeedback').textContent==='Profile saved.');
+ await fresh.locator('.cw-nav [data-view="overview"]').click();assert.ok((await fresh.locator('#cwNext').innerText()).includes('1 profile essential remains'));
+ const failing=await browser.newPage();failing.on('pageerror',e=>errors.push(e.message));await failing.goto('http://127.0.0.1:4181/candidate.html?fixture=error');await failing.waitForFunction(()=>document.querySelector('#cwContent').getAttribute('aria-busy')==='false');assert.equal(await failing.locator('#workspaceError').isVisible(),true);assert.ok((await failing.locator('#cwMetrics').innerText()).includes('—'));
+ assert.deepEqual(errors,[]);console.log('PASS: navigation, search, save/reload/remove, withdrawal confirmation/cancellation, profile save/create, mobile overflow, empty and error states; no browser exceptions.');
+ await browser.close();server.close();
+})().catch(e=>{console.error(e);server.close();process.exit(1)});
