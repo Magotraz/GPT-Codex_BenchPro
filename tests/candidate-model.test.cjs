@@ -21,3 +21,14 @@ test('placement is not represented as completed onboarding; past stages are not 
  for(const status of ['placed','withdrawn','closed','rejected'])assert.equal(M.active.includes(status),false);
  for(const status of M.active)assert.ok(M.stages[status]);
 });
+test('profile completeness counts zero years and optional preferences without changing eligibility',()=>{
+ const p={full_name:'Alex Morgan',primary_role:'Engineer',country_or_timezone:'India',skills:['SQL'],resume_file_path:'private/path',years_experience:0,profile_summary:'Builds systems',preferred_work_mode:'Remote',preferred_location:'India',weekly_hours:32};
+ assert.equal(M.completeness(p).filter(c=>c.done).length,10);
+ assert.equal(M.completeness({...p,years_experience:''}).find(c=>c.field==='years_experience').done,false);
+ assert.equal(M.readiness({...p,preferred_work_mode:null,weekly_hours:null}).every(c=>c.done),true);
+});
+test('timeline uses recorded changes and does not invent intermediate stages',()=>{
+ const a={created_at:'2026-10-01T00:00:00Z',status:'offer'};
+ assert.deepEqual(M.timeline(a,[]).map(e=>e.status),['submitted']);
+ assert.deepEqual(M.timeline(a,[{status:'offer',occurred_at:'2026-10-03T00:00:00Z'},{status:'submitted',occurred_at:a.created_at},{status:'reviewing',occurred_at:'2026-10-02T00:00:00Z'}]).map(e=>e.status),['submitted','reviewing','offer']);
+});

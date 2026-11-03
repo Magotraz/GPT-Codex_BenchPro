@@ -5,5 +5,19 @@
   function sharedSkills(p,profile){const own=new Set((profile?.skills||[]).map(s=>s.trim().toLowerCase()));return (p.skills||[]).filter(s=>own.has(s.trim().toLowerCase()))}
   function rank(projects,profile){return [...projects].sort((a,b)=>sharedSkills(b,profile).length-sharedSkills(a,profile).length||Number(b.featured)-Number(a.featured)||String(b.published_at||'').localeCompare(String(a.published_at||'')))}
   function matches(p,{q='',category='',mode=''}={}){return (!category||p.category===category)&&(!mode||p.work_mode===mode)&&(!q.trim()||[p.title,p.summary,p.location,...(p.skills||[])].join(' ').toLowerCase().includes(q.trim().toLowerCase()))}
-  return {active,stages,readiness,sharedSkills,rank,matches};
+  function completeness(p){return [...readiness(p),
+    {field:'years_experience',label:'Experience',done:p?.years_experience!=null&&p.years_experience!==''},
+    {field:'profile_summary',label:'Professional summary',done:!!String(p?.profile_summary||'').trim()},
+    {field:'preferred_work_mode',label:'Work arrangement',done:!!p?.preferred_work_mode},
+    {field:'preferred_location',label:'Preferred location',done:!!String(p?.preferred_location||'').trim()},
+    {field:'weekly_hours',label:'Weekly availability',done:Number(p?.weekly_hours)>0}]}
+  function timeline(application,events){
+    const rows=[{status:'submitted',occurred_at:application.created_at,label:'Application received'}];
+    for(const e of [...events].sort((a,b)=>String(a.occurred_at).localeCompare(String(b.occurred_at)))){
+      if(e.status==='submitted'&&rows.length===1)continue;
+      rows.push({...e,label:stages[e.status]?.[0]||'Status update'});
+    }
+    return rows;
+  }
+  return {completeness,timeline,active,stages,readiness,sharedSkills,rank,matches};
 });
