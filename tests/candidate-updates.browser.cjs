@@ -1,0 +1,27 @@
+const {chromium}=require('playwright'),assert=require('node:assert/strict'),path=require('node:path');
+const server=require('./candidate-preview-server.cjs');
+(async()=>{
+ await new Promise(r=>server.listen(4182,'127.0.0.1',r));
+ const browser=await chromium.launch({headless:true,channel:'chrome'}),page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ const ready=()=>page.waitForFunction(()=>document.querySelector('#cwContent').getAttribute('aria-busy')==='false');
+ await page.goto('http://127.0.0.1:4182/candidate.html');await ready();
+ assert.equal(await page.locator('#cwUpdatesBell').isVisible(),true);assert.equal(await page.locator('#cwUpdatesBell').innerText(),'');assert.equal(await page.locator('#cwUpdatesDot').isVisible(),true);
+ assert.equal(await page.getByRole('link',{name:'How BenchPro works',exact:true}).count(),0);
+ await page.locator('#cwUpdatesBell').click();await ready();assert.ok((await page.locator('#cwUpdatesList').innerText()).includes('Senior Data Engineer'));assert.ok((await page.locator('#cwUpdatesList').innerText()).includes('Under review'));
+ assert.equal(await page.locator('#cwUpdatesDot').isVisible(),true,'Opening does not mark updates read');
+ await page.screenshot({path:path.resolve(__dirname,'../../candidate-updates-desktop.png')});
+ await page.locator('[data-update]').first().click();await page.waitForSelector('#cwApplicationDetail .cw-timeline');assert.equal(await page.locator('#cwUpdatesDot').isVisible(),false);
+ await page.getByRole('button',{name:'Close application details',exact:true}).click();
+ await page.reload();await ready();assert.equal(await page.locator('#cwUpdatesDot').isVisible(),false,'Read status persists on reload');
+ await page.evaluate(()=>{const s=JSON.parse(sessionStorage.getItem('candidate-preview-state'));s.events.push({id:'new-event',application_id:s.applications[0].id,status:'shortlisted',occurred_at:new Date().toISOString()});s.applications[0].status='shortlisted';sessionStorage.setItem('candidate-preview-state',JSON.stringify(s))});
+ await page.reload();await ready();assert.equal(await page.locator('#cwUpdatesDot').isVisible(),true);
+ await page.setViewportSize({width:390,height:844});await page.locator('#cwUpdatesBell').click();await ready();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);assert.equal(await page.evaluate(()=>document.querySelector('#cwUpdatesDialog').scrollWidth>document.querySelector('#cwUpdatesDialog').clientWidth),false);
+ await page.screenshot({path:path.resolve(__dirname,'../../candidate-updates-mobile.png')});
+ await page.locator('#cwUpdatesReadAll').click();await page.waitForFunction(()=>document.querySelector('#cwUpdatesDot').hidden);await page.keyboard.press('Escape');assert.equal(await page.locator('#cwUpdatesBell').evaluate(el=>el===document.activeElement),true);
+ await page.reload();await ready();assert.equal(await page.locator('#cwUpdatesDot').isVisible(),false);
+ const empty=await browser.newPage();await empty.goto('http://127.0.0.1:4182/candidate.html?fixture=new');await empty.waitForFunction(()=>document.querySelector('#cwContent').getAttribute('aria-busy')==='false');await empty.locator('#cwUpdatesBell').click();await empty.waitForFunction(()=>document.querySelector('#cwContent').getAttribute('aria-busy')==='false');assert.ok((await empty.locator('#cwUpdatesList').innerText()).includes('all caught up'));assert.equal(await empty.locator('#cwUpdatesDot').isVisible(),false);
+ const failure=await browser.newPage();await failure.goto('http://127.0.0.1:4182/candidate.html?fixture=receipt-error');await failure.waitForFunction(()=>document.querySelector('#cwContent').getAttribute('aria-busy')==='false');await failure.locator('#cwUpdatesBell').click();await failure.waitForFunction(()=>document.querySelector('#cwContent').getAttribute('aria-busy')==='false');await failure.locator('#cwUpdatesReadAll').click();await failure.waitForSelector('#cwUpdatesError:not([hidden])');assert.equal(await failure.locator('#cwUpdatesDot').isVisible(),true);
+ await failure.evaluate(()=>window.CandidateUpdates.reset());assert.equal(await failure.locator('#cwUpdatesDialog').isVisible(),false);assert.equal(await failure.locator('#cwUpdatesDot').isVisible(),false);assert.ok(!(await failure.locator('#cwUpdatesList').innerText()).includes('Senior Data Engineer'));
+ assert.deepEqual(errors,[]);console.log('PASS: icon-only bell, personal updates, unread persistence, application navigation, mark-all, mobile fit, keyboard dismissal, empty state, receipt failure and reset');await browser.close();server.close();
+})().catch(e=>{console.error(e);server.close();process.exit(1)});

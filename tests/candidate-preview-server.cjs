@@ -10,6 +10,7 @@ const listings=[['Senior Data Engineer','Data & AI',['Python','SQL','Snowflake']
 let state=JSON.parse(sessionStorage.getItem('candidate-preview-state')||'null')||{profile:mode==='new'?null:sampleProfile,saved:[{project_id:listings[1].id,created_at:'2026-10-26T12:00:00Z'}],applications:[{id:'00000000-0000-4000-8000-000000000921',project_id:listings[0].id,candidate_id:sampleProfile.id,status:'reviewing',created_at:'2026-10-24T10:00:00Z',updated_at:'2026-10-26T12:00:00Z',project_listings:listings[0]},{id:'00000000-0000-4000-8000-000000000922',project_id:listings[2].id,candidate_id:sampleProfile.id,status:'submitted',created_at:'2026-10-25T10:00:00Z',updated_at:'2026-10-25T10:00:00Z',project_listings:listings[2]}]};
 if(mode==='empty'||mode==='new'){state.saved=[];state.applications=[]}
 state.events=state.events||[{id:'event-1',application_id:'00000000-0000-4000-8000-000000000921',status:'reviewing',occurred_at:'2026-10-26T12:00:00Z'}];
+state.receipts=state.receipts||[];
 const persist=()=>sessionStorage.setItem('candidate-preview-state',JSON.stringify(state));
 window.fetch=async(url,options={})=>{
  const u=new URL(url,location.href),table=u.pathname.split('/').pop(),method=options.method||'GET',body=options.body&&typeof options.body==='string'?JSON.parse(options.body):{},id=(u.searchParams.get('id')||'').replace('eq.',''),pid=(u.searchParams.get('project_id')||'').replace('eq.','');
@@ -17,12 +18,13 @@ window.fetch=async(url,options={})=>{
  const response=(x,status=200)=>new Response(JSON.stringify(x),{status,headers:{'Content-Type':'application/json'}});
  if(mode==='error'&&table!=='candidate_accounts')return response({},503);
  if(u.pathname.includes('/storage/'))return response({},403);
+ if(table==='candidate_update_receipts'&&method==='POST'){if(mode==='receipt-error')return response({},503);for(const row of body)if(!state.receipts.some(r=>r.event_id===row.event_id&&r.user_id===row.user_id))state.receipts.push(row);persist();return new Response(null,{status:201})}
  if(table==='candidate_accounts'&&method!=='GET'){state.profile={...state.profile,...body};persist();return response([state.profile])}
  if(table==='candidate_saved_projects'&&method==='POST'){state.saved.push({...body,created_at:new Date().toISOString()});persist();return response([state.saved.at(-1)])}
  if(table==='candidate_saved_projects'&&method==='DELETE'){state.saved=state.saved.filter(s=>s.project_id!==pid);persist();return response(null)}
  if(table==='project_applications'&&method==='PATCH'){const a=state.applications.find(a=>a.id===id);Object.assign(a,body,{updated_at:new Date().toISOString()});state.events.push({id:'event-'+Date.now(),application_id:a.id,status:a.status,occurred_at:a.updated_at});persist();return response([a])}
  if(table==='project_applications'&&method==='POST'){const a={...body,id:'00000000-0000-4000-8000-000000000923',status:'submitted',created_at:new Date().toISOString(),project_listings:listings.find(p=>p.id===body.project_id)};state.applications.push(a);persist();return response([a])}
- let rows=table==='candidate_accounts'?(state.profile?[state.profile]:[]):table==='project_listings'?(mode==='empty'||mode==='new'?[]:listings):table==='project_applications'?state.applications:table==='candidate_saved_projects'?state.saved:table==='candidate_application_events'?state.events.filter(e=>e.application_id===(u.searchParams.get('application_id')||'').replace('eq.','')):[];
+ let rows=table==='candidate_accounts'?(state.profile?[state.profile]:[]):table==='project_listings'?(mode==='empty'||mode==='new'?[]:listings):table==='project_applications'?state.applications:table==='candidate_saved_projects'?state.saved:table==='candidate_update_receipts'?state.receipts.filter(r=>r.user_id===(u.searchParams.get('user_id')||'').replace('eq.','')):table==='candidate_application_events'?state.events.filter(e=>u.searchParams.has('application_id')?e.application_id===(u.searchParams.get('application_id')||'').replace('eq.',''):state.applications.some(a=>a.id===e.application_id&&a.candidate_id===(u.searchParams.get('project_applications.candidate_id')||'').replace('eq.',''))):[];
  if(id)rows=rows.filter(r=>r.id===id);if(pid)rows=rows.filter(r=>r.project_id===pid);
  const offset=Number(u.searchParams.get('offset')||0),limit=Number(u.searchParams.get('limit')||200);return response(rows.slice(offset,offset+limit));
 };
