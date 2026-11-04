@@ -3,11 +3,11 @@
   const DAY=86400000;
   const activeStages=['submitted','reviewing','shortlisted','client_review','offer'];
   const age=(date,now=Date.now())=>Math.max(0,Math.floor((now-new Date(date).getTime())/DAY))||0;
-  function operating(data){
-    const clients=(data.clients||[]).filter(x=>!x.is_demo), ids=new Set(clients.map(x=>x.id));
-    const roles=(data.roles||[]).filter(x=>!x.is_demo&&(!x.client_id||ids.has(x.client_id)));
-    const listings=(data.listings||[]).filter(x=>!x.is_demo), listingIds=new Set(listings.map(x=>x.id));
-    return {...data,clients,roles,listings,applications:(data.applications||[]).filter(x=>listingIds.has(x.project_id)),members:(data.members||[]).filter(x=>ids.has(x.client_id)),candidates:data.candidates||[]};
+  function operating(data,demo=false){
+    const clients=(data.clients||[]).filter(x=>!!x.is_demo===demo), ids=new Set(clients.map(x=>x.id));
+    const roles=(data.roles||[]).filter(x=>!!x.is_demo===demo&&(!x.client_id||ids.has(x.client_id)));
+    const listings=(data.listings||[]).filter(x=>!!x.is_demo===demo), listingIds=new Set(listings.map(x=>x.id));
+    return {...data,clients,roles,listings,applications:(data.applications||[]).filter(x=>listingIds.has(x.project_id)),members:(data.members||[]).filter(x=>ids.has(x.client_id)),candidates:(data.candidates||[]).filter(x=>!!x.is_demo===demo)};
   }
   function metrics(data){return {clients:data.clients.length,activeClients:data.clients.filter(x=>x.lifecycle_status==='active').length,openRoles:data.roles.filter(x=>x.status!=='closed').length,unowned:data.roles.filter(x=>x.status!=='closed'&&!x.assigned_to).length,applications:data.applications.filter(x=>activeStages.includes(x.status)).length,offers:data.applications.filter(x=>x.status==='offer').length,placed:data.applications.filter(x=>x.status==='placed').length,rejected:data.applications.filter(x=>x.status==='rejected').length};}
   function actions(data,now=Date.now()){

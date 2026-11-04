@@ -22,7 +22,7 @@ insert into public.client_memberships(id,client_id,user_id,email,role,status) va
 insert into public.staffing_requests(id,client_id,company_name,contact_name,work_email,role_or_skills,status,is_demo) values
 (pg_temp.tid('role'),pg_temp.tid('client'),'DEMO | Shortlist QA','QA Owner','benchpro-demo+role@example.com','QA Data Engineer','qualified',true),
 (pg_temp.tid('other_role'),pg_temp.tid('other_client'),'DEMO | Other Client QA','QA Owner','benchpro-demo+other-role@example.com','QA Other Engineer','qualified',true);
-insert into public.candidate_accounts(id,user_id,full_name,primary_role,skills,profile_summary) values(pg_temp.tid('candidate'),pg_temp.tid('candidate_user'),'QA Alex Morgan','Data Engineer',array['SQL','Python'],'INTERNAL RAW PROFILE MUST NOT LEAK');
+insert into public.candidate_accounts(id,user_id,full_name,primary_role,skills,profile_summary,is_demo) values(pg_temp.tid('candidate'),pg_temp.tid('candidate_user'),'QA Alex Morgan','Data Engineer',array['SQL','Python'],'INTERNAL RAW PROFILE MUST NOT LEAK',true);
 insert into public.project_listings(id,title,category,summary,description,requirements,skills,work_mode,location,duration,experience,is_demo) values(pg_temp.tid('listing'),'QA Data Engineer','Data & AI','Transaction-only shortlist QA project','Transaction-only shortlist QA project description',array['SQL'],array['SQL'],'Remote','India','6 months','5 years',true);
 insert into public.project_listing_sources(project_id,staffing_request_id,created_by) values(pg_temp.tid('listing'),pg_temp.tid('role'),pg_temp.tid('staff'));
 insert into public.project_applications(id,project_id,candidate_id,availability,consent) values(pg_temp.tid('application'),pg_temp.tid('listing'),pg_temp.tid('candidate'),'available',true);

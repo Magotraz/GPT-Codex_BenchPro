@@ -2,6 +2,14 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const M=require('../admin-model.js');
 const {readAll}=require('../admin-data.js');
+
+test('persisted test data has separate totals including candidates, roles and applications',()=>{
+ const raw={clients:[{id:'real'},{id:'demo',is_demo:true}],roles:[{id:'r',client_id:'real'},{id:'d',client_id:'demo',is_demo:true}],candidates:[{id:'r'},{id:'d',is_demo:true}],listings:[{id:'r'},{id:'d',is_demo:true}],applications:[{project_id:'r'},{project_id:'d'}],members:[{client_id:'real'},{client_id:'demo'}]};
+ const real=M.operating(raw),demo=M.operating(raw,true);
+ for(const key of ['clients','roles','candidates','listings','applications','members'])assert.equal(demo[key].length,1);
+ assert.equal(demo.clients[0].id,'demo');assert.equal(demo.candidates[0].id,'d');assert.equal(real.candidates[0].id,'r');
+ assert.equal(raw.candidates.length,2);assert.equal(raw.clients[1].is_demo,true);
+});
 test('live operational totals exclude demo clients, roles and applications on demo listings',()=>{
  const d=M.operating({clients:[{id:'c'},{id:'demo',is_demo:true}],roles:[{id:'a',client_id:'c'},{id:'b',client_id:'demo'},{id:'c',is_demo:true},{id:'d',client_id:null}],listings:[{id:'p'},{id:'pd',is_demo:true}],applications:[{project_id:'p'},{project_id:'pd'}],members:[{client_id:'c'},{client_id:'demo'}]});
  assert.deepEqual(d.roles.map(r=>r.id),['a','d']);assert.equal(d.applications.length,1);assert.equal(d.members.length,1);
