@@ -1,5 +1,7 @@
 # Recruiter-led candidate submissions
 
+The current workspace uses role-based Kanban boards. See [Role pipeline](role-pipeline.md) for sourced candidates, board stages, approved documents, testing and deployment. The submission controls below remain the publication boundary.
+
 ## Operating flow
 
 1. Open Admin → Recruiting desk → New submission, or Talent & applications → Prepare for client. Choose a registered candidate and an open client-linked role.
@@ -20,7 +22,7 @@
 
 ## Release limits
 
-Registered candidates only. No automatic email delivery, calendar bookings, offer acceptance or onboarding workflow is included. A rating represents recruiter judgement about a particular role, not an automated percentage or permanent score for the candidate.
+Registered and privately sourced candidates are supported by the role pipeline. Interview, offer and onboarding milestones are tracked manually; there is no automatic email delivery, calendar booking, contract generation or candidate offer-signing workflow. A rating represents recruiter judgement about a particular role, not an automated percentage or permanent score for the candidate.
 
 ## Verification
 

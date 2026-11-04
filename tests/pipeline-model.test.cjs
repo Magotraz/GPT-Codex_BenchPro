@@ -1,0 +1,7 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+global.Shortlist=require('../shortlist-core');const P=require('../pipeline');
+test('legacy requests map to interview without inventing a booking',()=>{assert.equal(P.stage({status:'interview_requested'}),'interview');assert.equal(P.stage({status:'on_hold'}),'client_review')});
+test('client movement cannot confirm onboarding or start, and completed starts are final',()=>{assert.deepEqual(P.allowed({pipeline_stage:'client_review'},false).map(([s])=>s),['client_review','interview','offer']);assert.deepEqual(P.allowed({pipeline_stage:'onboarding'},false),[]);assert.deepEqual(P.allowed({pipeline_stage:'started'},true),[])});
+test('withdrawal and decline archive a presentation',()=>{assert.ok(P.archived({revoked_at:'2026-11-04'}));assert.ok(P.archived({status:'declined'}));assert.ok(!P.archived({status:'on_hold'}))});
+test('card content is escaped; ratings are per card',()=>{const html=P.card({id:'bad"id',profile:{full_name:'<img onerror=alert(1)>',skills:'<script>'},fit_rating:4.8});assert.ok(!html.includes('<img'));assert.ok(!html.includes('<script>'));assert.ok(html.includes('4.8'));assert.ok(html.includes('&quot;id'))});
+test('documents have bounded file types and sizes',()=>{assert.equal(P.mime({name:'cv.PDF',size:200}),'application/pdf');assert.throws(()=>P.mime({name:'run.exe',size:200}));assert.throws(()=>P.mime({name:'cv.pdf',size:10485761}))});

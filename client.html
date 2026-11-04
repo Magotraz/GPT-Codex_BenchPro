@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="brand.css">
   <link rel="stylesheet" href="dashboard.css">
   <link rel="stylesheet" href="client-workspace.css">
-<link rel="stylesheet" href="shortlists.css">
+<link rel="stylesheet" href="shortlists.css"><link rel="stylesheet" href="pipeline.css">
 </head>
 <body>
 <a class="skip-link" href="#mainContent">Skip to content</a>
@@ -34,7 +34,7 @@
     <nav class="workspace-nav" aria-label="Client workspace menu">
       <button data-tab="overview" aria-controls="overviewPanel" aria-current="page"><span class="nav-icon" data-icon="overview"></span>Overview</button>
       <button data-tab="roles" aria-controls="rolesPanel"><span class="nav-icon" data-icon="roles"></span>Roles<span id="navRoleCount" class="nav-count">—</span></button>
-      <button data-tab="shortlists" aria-controls="shortlistsPanel"><span class="nav-icon" data-icon="document"></span>Shortlists<span id="shortlistCount" class="nav-count">0</span></button>
+      <button data-tab="shortlists" aria-controls="shortlistsPanel"><span class="nav-icon" data-icon="document"></span>Talent pipeline<span id="shortlistCount" class="nav-count">0</span></button>
       <button id="postRoleTab" data-tab="post-role" aria-controls="roleFormPanel" hidden><span class="nav-icon" data-icon="plus"></span>Post a role</button>
       <div id="manageDivider" class="nav-divider" hidden></div>
       <button id="teamTab" data-tab="team" aria-controls="teamAccessPanel" hidden><span class="nav-icon" data-icon="team"></span>Team access</button>
@@ -113,7 +113,7 @@
 <dialog id="assignmentConfirmDialog" class="modal confirmation-dialog" aria-labelledby="assignmentDialogTitle" aria-describedby="assignmentDialogMessage"><div class="modal-body"><span class="modal-symbol" data-icon="check"></span><h2 id="assignmentDialogTitle">Confirm role assignment</h2><p id="assignmentDialogMessage"></p></div><form method="dialog" class="modal-actions"><button class="button secondary" value="cancel">Cancel</button><button id="confirmationAction" class="button" value="confirm">Assign role</button></form></dialog>
 <script src="client-model.js"></script>
 <script src="shortlist-core.js"></script>
-<script src="client-shortlists.js"></script>
+<script src="pipeline.js"></script><script src="client-shortlists.js"></script>
 <script src="client.js"></script>
 </body>
 </html>

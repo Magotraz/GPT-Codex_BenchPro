@@ -122,14 +122,14 @@
     state.tab = tab;
     const copy = {
       overview: ['YOUR HIRING, AT A GLANCE', isStaffMode ? 'Client workspace' : 'Welcome, ' + greetingName(), canManage() ? 'A clear view of your roles, your team, and what’s next.' : 'Your assigned roles, key dates, and next steps.'],
-      shortlists: ['CURATED FOR YOUR ROLES', 'Your shortlists', 'Review candidate profiles and share your next steps with BenchPro.'],
+      shortlists: ['CURATED FOR YOUR ROLES', 'Talent pipeline', 'Review candidates, share decisions and follow each role through to its next project start.'],
       roles: ['FROM BRIEF TO DELIVERY', 'Your roles', canManage() ? 'Every role. Every owner. One clear view.' : 'The roles your superuser has assigned to you.'],
       'post-role': ['LET’S BUILD YOUR NEXT TEAM', 'Post a new role', 'Share your brief. We’ll take it from there.'],
       team: ['GREAT WORK STARTS WITH YOUR TEAM', 'Team access', 'Bring your colleagues together. Keep access in the right hands.'],
       help: ['WE’RE HERE TO HELP', 'Help & support', 'Find your way around your BenchPro workspace.']
     }[tab];
     $('pageEyebrow').textContent = copy[0]; $('title').textContent = copy[1]; $('pageDescription').textContent = copy[2];
-    $('breadcrumb').textContent = { overview: 'Overview', roles: 'Roles', shortlists: 'Shortlists', 'post-role': 'Post a role', team: 'Team access', help: 'Help & support' }[tab];
+    $('breadcrumb').textContent = { overview: 'Overview', roles: 'Roles', shortlists: 'Talent pipeline', 'post-role': 'Post a role', team: 'Team access', help: 'Help & support' }[tab];
     document.querySelectorAll('[data-tab]').forEach(button => {
       if (button.dataset.tab === tab) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
     });
@@ -264,7 +264,7 @@
       // All metrics, searches and drawers use this same permission-scoped list.
       actorMembership = nextMembership; client = nextClient; members = nextMembers; domains = nextDomains;
       roles = M.visibleRoles(nextRoles, nextMembership, isStaffMode); loaded = true; render();
-      await window.ClientShortlists.load({ api, client, roles, isStaffMode });
+      await window.ClientShortlists.load({ api, client, roles, isStaffMode, accessToken });
     } finally {
       $('loadingState').hidden = true; $('refresh').disabled = false; $('refresh').removeAttribute('aria-busy');
     }
@@ -280,7 +280,7 @@
     const owner = ownerOf(role);
     const options = '<option value="">Unassigned</option>' + members.filter(m => m.status === 'active').map(m => `<option value="${esc(m.id)}" ${m.id === role.client_assignee_membership_id ? 'selected' : ''}>${esc(m.email)}</option>`).join('');
     const assignment = canAssign() ? `<div class="owner-summary"><span class="avatar">${esc(owner ? M.initials(owner.email) : '—')}</span><span class="owner-email">${esc(owner?.email || (role.client_assignee_membership_id ? 'Previous team member' : 'Unassigned'))}</span><button class="text-button" id="editAssignment">${role.client_assignee_membership_id ? 'Edit' : 'Assign owner'}</button></div><div id="assignmentEditor" class="assignment-editor" hidden><label class="sr-only" for="assignmentOwner">Choose role owner</label><select id="assignmentOwner" data-assignment="${esc(role.id)}" data-previous="${esc(role.client_assignee_membership_id || '')}">${options}</select><button id="cancelAssignment" class="text-button">Cancel</button></div>` : `<div class="owner-summary"><span class="avatar">${esc(M.initials(owner?.email || greetingName()))}</span><span class="owner-email">${isStaffMode ? esc(owner?.email || 'Unassigned') : 'Assigned to you'}</span></div>`;
-    $('roleDetailContent').innerHTML = `<div class="detail-top"><p class="eyebrow">ROLE DETAILS</p><button class="icon-button" data-close-dialog="roleDetailDialog" aria-label="Close role details">${icon('close')}</button></div><div class="detail-heading">${badge(role.status)}<h2 id="detailTitle">${esc(role.role_or_skills)}</h2><p>Submitted ${esc(fmtDate(role.created_at))}</p></div><div class="detail-body"><section class="detail-section"><h3>Role owner</h3>${assignment}</section><section class="detail-section"><dl class="detail-grid"><div><dt>Project duration</dt><dd>${esc(role.project_duration || 'Not specified')}</dd></div><div><dt>Target start date</dt><dd>${esc(fmtDate(role.target_start_date))}</dd></div></dl></section><section class="detail-section"><button class="sl-button" data-role-shortlists="${esc(role.id)}">View shortlist →</button><h3>The brief</h3><p class="detail-description">${esc(role.project_details || 'No additional project details were provided.')}</p></section>${role.jd_file_path ? `<section class="detail-section"><h3>Job description</h3><button class="attachment-button" data-view-jd="${esc(role.id)}">${icon('document')}<span>${esc(role.jd_file_name || 'Role description')}<small>Open secure document</small></span>${icon('right')}</button></section>` : ''}<div id="detailFeedback" class="feedback dialog-feedback" role="status" hidden></div><div class="detail-reference">Role reference: ${esc(role.id)}<button class="text-button" data-copy-reference="${esc(role.id)}">Copy reference</button></div></div>`;
+    $('roleDetailContent').innerHTML = `<div class="detail-top"><p class="eyebrow">ROLE DETAILS</p><button class="icon-button" data-close-dialog="roleDetailDialog" aria-label="Close role details">${icon('close')}</button></div><div class="detail-heading">${badge(role.status)}<h2 id="detailTitle">${esc(role.role_or_skills)}</h2><p>Submitted ${esc(fmtDate(role.created_at))}</p></div><div class="detail-body"><section class="detail-section"><h3>Role owner</h3>${assignment}</section><section class="detail-section"><dl class="detail-grid"><div><dt>Project duration</dt><dd>${esc(role.project_duration || 'Not specified')}</dd></div><div><dt>Target start date</dt><dd>${esc(fmtDate(role.target_start_date))}</dd></div></dl></section><section class="detail-section"><button class="sl-button" data-role-shortlists="${esc(role.id)}">View pipeline →</button><h3>The brief</h3><p class="detail-description">${esc(role.project_details || 'No additional project details were provided.')}</p></section>${role.jd_file_path ? `<section class="detail-section"><h3>Job description</h3><button class="attachment-button" data-view-jd="${esc(role.id)}">${icon('document')}<span>${esc(role.jd_file_name || 'Role description')}<small>Open secure document</small></span>${icon('right')}</button></section>` : ''}<div id="detailFeedback" class="feedback dialog-feedback" role="status" hidden></div><div class="detail-reference">Role reference: ${esc(role.id)}<button class="text-button" data-copy-reference="${esc(role.id)}">Copy reference</button></div></div>`;
   }
   function openRole(id) {
     if (!roles.some(role => role.id === id)) return;
