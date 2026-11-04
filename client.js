@@ -499,8 +499,8 @@
   $('signOut').addEventListener('click', async () => {
     $('signOut').disabled = true;
     try { await auth('logout', {}, await accessToken()); } catch { /* Clear the local session even when offline. */ }
-    sessionStorage.removeItem(managementId ? STAFF_KEY : CLIENT_KEY); session = null;
-    if (!managementId) location.replace('login.html'); else { showSignedOut(); $('signOut').disabled = false; }
+    sessionStorage.removeItem(STAFF_KEY); sessionStorage.removeItem(CLIENT_KEY); session = null;
+    location.replace('/');
   });
   $('forgotPassword').addEventListener('click', async () => {
     if (!$('email').reportValidity() || !$('email').value.trim()) { $('email').focus(); return; }
