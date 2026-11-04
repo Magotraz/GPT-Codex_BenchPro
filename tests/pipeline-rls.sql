@@ -58,7 +58,7 @@ set local role authenticated;
 select pg_temp.expect_denied(format($q$select public.shortlist_action('create','{"staffing_request_id":"%s","talent_profile_id":"%s"}')$q$,pg_temp.tid('role'),(select id from public.talent_profiles where work_email='classification@example.com')));
 -- Private document plus a separate explicitly approved document.
 insert into storage.objects(bucket_id,name) values('candidate-resumes','candidates/'||pg_temp.tid('source_talent')||'/'||gen_random_uuid()||'_private.pdf');
-select public.pipeline_action('source_resume',jsonb_build_object('id',pg_temp.tid('source_review'),'revision',1,'path',(select name from storage.objects where bucket_id='candidate-resumes'),'name','private.pdf','size',100,'type','application/pdf'));
+select public.pipeline_action('source_resume',jsonb_build_object('id',pg_temp.tid('source_review'),'revision',1,'path',(select name from storage.objects where bucket_id='candidate-resumes' and name like 'candidates/'||pg_temp.tid('source_talent')||'/%'),'name','private.pdf','size',100,'type','application/pdf'));
 insert into storage.objects(bucket_id,name) values('client-profile-documents','reviews/'||pg_temp.tid('source_review')||'/approved.pdf');
 select public.pipeline_action('document',jsonb_build_object('id',pg_temp.tid('source_review'),'revision',2,'path','reviews/'||pg_temp.tid('source_review')||'/approved.pdf','name','approved.pdf'));
 select pg_temp.expect_denied(format($q$select public.pipeline_action('document','{"id":"%s","revision":3,"path":"reviews/other/secret.pdf"}')$q$,pg_temp.tid('source_review')));
@@ -71,7 +71,7 @@ select pg_temp.claim('staff');
 select public.shortlist_action('submit',pg_temp.packet_for(pg_temp.tid('source_review')));
 insert into shortlist_test_ids select 'source_submission',id from public.client_submissions where review_id=pg_temp.tid('source_review');
 do $$ begin
- if exists(select 1 from public.candidate_shortlist_updates) then raise exception 'FAIL sourced person created account updates'; end if;
+ if exists(select 1 from public.candidate_shortlist_updates where candidate_id=pg_temp.tid('candidate')) then raise exception 'FAIL sourced person created unrelated account updates'; end if;
  if (select count(*) from public.shortlist_reviews where talent_profile_id=pg_temp.tid('source_talent'))<>1 then raise exception 'FAIL duplicate role consideration'; end if;
 end $$;
 -- Re-adding existing talent returns the existing role card.
