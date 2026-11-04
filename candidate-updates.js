@@ -21,23 +21,23 @@
     if(!events.length){$('cwUpdatesList').innerHTML='<div class="cw-updates-empty"><strong>You’re all caught up.</strong><p>Updates about your applications will appear here as they happen.</p></div>';return}
     $('cwUpdatesList').innerHTML=events.slice(0,limit).map(e=>{
       const a=ctx.applications.find(a=>a.id===e.application_id),stage=(e.kind==='shortlist'?[e.title,e.message]:M.stages[e.status])||['Application updated','Open your application to view its progress.'],isRead=read.has(e.id),when=new Date(e.occurred_at).toLocaleString(undefined,{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'});
-      return `<button type="button" class="cw-update-item ${isRead?'':'unread'}" data-update="${E(e.id)}" ${saving?'disabled':''}><span class="cw-update-indicator" aria-hidden="true"></span><span><strong>${E(stage[0])}${isRead?'':'<span class="cw-sr-only"> · Unread</span>'}</strong><b>${E(e.kind==='shortlist'?'Client introduction':(a?.project_listings?.title||'Your application'))}</b><span class="cw-update-description">${E(stage[1])}</span><time datetime="${E(e.occurred_at)}">${E(when)}</time></span><span aria-hidden="true">↗</span></button>`;
+      return `<button type="button" class="cw-update-item ${isRead?'':'unread'}" data-update="${E(e.id)}" ${saving?'disabled':''}><span class="cw-update-indicator" aria-hidden="true"></span><span><strong>${E(stage[0])}${isRead?'':'<span class="cw-sr-only"> · Unread</span>'}</strong><b>${E(e.kind==='shortlist'?'Client submission':(a?.project_listings?.title||'Your application'))}</b><span class="cw-update-description">${E(stage[1])}</span><time datetime="${E(e.occurred_at)}">${E(when)}</time></span>${e.kind==='shortlist'?'':'<span aria-hidden="true">↗</span>'}</button>`;
     }).join('');
   }
   async function load(options){
     const ticket=++version;ctx=options;loading=true;error('');render();
     try{
-      let next=[],receipts=[],introductions=[];
+      let next=[],receipts=[],submissions=[];
       if(options.profile?.id){
         if(!options.applications)throw new Error('Applications unavailable');
         // Explicit candidate filter also isolates staff accounts with candidate access.
         next=await all(options,'candidate_application_events',{select:'id,application_id,status,occurred_at,project_applications!inner(candidate_id)','project_applications.candidate_id':'eq.'+options.profile.id,order:'occurred_at.desc,id.desc'});
-        introductions=(await all(options,'candidate_shortlist_updates',{select:'id,permission_id,candidate_id,title,message,occurred_at,read_at',candidate_id:'eq.'+options.profile.id,order:'occurred_at.desc,id.desc'})).map(e=>({...e,kind:'shortlist'}));
+        submissions=(await all(options,'candidate_shortlist_updates',{select:'id,candidate_id,title,message,occurred_at,read_at',candidate_id:'eq.'+options.profile.id,archived_at:'is.null',order:'occurred_at.desc,id.desc'})).map(e=>({...e,kind:'shortlist'}));
         receipts=await all(options,'candidate_update_receipts',{select:'event_id',user_id:'eq.'+options.getSession().user.id,order:'event_id.asc'});
       }
       if(ticket!==version)return;
       const ownIds=new Set((options.applications||[]).map(a=>a.id));
-      events=[...next.filter(e=>ownIds.has(e.application_id)),...introductions].sort((a,b)=>String(b.occurred_at).localeCompare(String(a.occurred_at))||String(b.id).localeCompare(String(a.id)));read=new Set([...receipts.map(r=>r.event_id),...introductions.filter(e=>e.read_at).map(e=>e.id)]);ready=true;
+      events=[...next.filter(e=>ownIds.has(e.application_id)),...submissions].sort((a,b)=>String(b.occurred_at).localeCompare(String(a.occurred_at))||String(b.id).localeCompare(String(a.id)));read=new Set([...receipts.map(r=>r.event_id),...submissions.filter(e=>e.read_at).map(e=>e.id)]);ready=true;
     }catch(e){if(ticket!==version)return;ready=false;events=[];read.clear();error('We couldn’t load your updates. Please try Refresh.')}
     finally{if(ticket===version){loading=false;render()}}
   }
@@ -59,6 +59,6 @@
   $('cwUpdatesRetry').onclick=()=>ctx?.onRefresh();
   $('cwUpdatesReadAll').onclick=async()=>{if(saving||loading||!ready)return;await mark(events.filter(e=>!read.has(e.id)).map(e=>e.id));if(dialog.open)$('cwUpdatesClose').focus()};
   $('cwUpdatesMore').onclick=()=>{limit+=20;render()};
-  $('cwUpdatesList').onclick=async e=>{const button=e.target.closest('[data-update]');if(!button||saving||loading)return;const event=events.find(item=>item.id===button.dataset.update);if(!event)return;const context=ctx;if(await mark(read.has(event.id)?[]:[event.id])){dialog.close();if(event.kind==='shortlist')window.CandidateShortlists.open(event.permission_id);else context.onOpen(event.application_id)}};
+  $('cwUpdatesList').onclick=async e=>{const button=e.target.closest('[data-update]');if(!button||saving||loading)return;const event=events.find(item=>item.id===button.dataset.update);if(!event)return;const context=ctx;if(await mark(read.has(event.id)?[]:[event.id])){if(event.kind!=='shortlist'){dialog.close();context.onOpen(event.application_id)}}};
   window.CandidateUpdates={load,reset(){version++;ctx=null;events=[];read.clear();ready=false;loading=false;saving=false;if(dialog.open)dialog.close();render()}};
 })();

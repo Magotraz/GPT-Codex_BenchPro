@@ -122,7 +122,7 @@
     state.tab = tab;
     const copy = {
       overview: ['YOUR HIRING, AT A GLANCE', isStaffMode ? 'Client workspace' : 'Welcome, ' + greetingName(), canManage() ? 'A clear view of your roles, your team, and what’s next.' : 'Your assigned roles, key dates, and next steps.'],
-      shortlists: ['CURATED FOR YOUR ROLES', 'Your shortlists', 'Review approved profiles and share your next steps with BenchPro.'],
+      shortlists: ['CURATED FOR YOUR ROLES', 'Your shortlists', 'Review candidate profiles and share your next steps with BenchPro.'],
       roles: ['FROM BRIEF TO DELIVERY', 'Your roles', canManage() ? 'Every role. Every owner. One clear view.' : 'The roles your superuser has assigned to you.'],
       'post-role': ['LET’S BUILD YOUR NEXT TEAM', 'Post a new role', 'Share your brief. We’ll take it from there.'],
       team: ['GREAT WORK STARTS WITH YOUR TEAM', 'Team access', 'Bring your colleagues together. Keep access in the right hands.'],
